@@ -1,4 +1,4 @@
-package com.alexeybondarenko.picsearch.ui.theme
+package com.alexeybondarenko.picsearch.ui.utils.theme
 
 import android.app.Activity
 import android.os.Build
