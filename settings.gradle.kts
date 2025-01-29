@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "PicSearch"
 include(":app")
- 
+include(":data")
+include(":domain")
