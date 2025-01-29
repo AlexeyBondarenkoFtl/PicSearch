@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun ImageSearchScreen(
@@ -52,4 +53,16 @@ fun ImageSearchScreen(
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ImageSearchScreenPreview() {
+    ImageSearchScreen(
+        uiState = ImageSearchUiState.ImageSearchLoaded(
+            counter = 1,
+            errorMessages = listOf()
+        ),
+        onIncreaseClick = {}
+    )
 }
