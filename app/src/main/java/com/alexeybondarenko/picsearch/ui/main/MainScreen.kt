@@ -20,12 +20,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
-import com.alexeybondarenko.picsearch.ui.search.SearchScreen
+import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchScreenRoot
 import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
 
 @Composable
 fun MainScreen(
-    searchScreen: @Composable () -> Unit,
+    imageSearchScreen: @Composable () -> Unit,
     savedScreen: @Composable () -> Unit,
     settingsScreen: @Composable () -> Unit,
 ) {
@@ -45,7 +45,7 @@ fun MainScreen(
                 modifier = Modifier.padding(paddingValues),
                 selectedItemIndex = selectedItemIndex,
                 navItems = navItems,
-                searchScreen = searchScreen,
+                imageSearchScreen = imageSearchScreen,
                 savedScreen = savedScreen,
                 settingsScreen = settingsScreen,
             )
@@ -82,7 +82,7 @@ private fun AnimatedContentContainer(
     modifier: Modifier = Modifier,
     selectedItemIndex: Int,
     navItems: List<NavigationItem>,
-    searchScreen: @Composable () -> Unit,
+    imageSearchScreen: @Composable () -> Unit,
     savedScreen: @Composable () -> Unit,
     settingsScreen: @Composable () -> Unit,
 ) {
@@ -100,7 +100,7 @@ private fun AnimatedContentContainer(
         }, label = "animated content"
     ) { targetCount ->
         when (targetCount) {
-            navItems.indexOf(NavigationItem.SEARCH) -> searchScreen.invoke()
+            navItems.indexOf(NavigationItem.SEARCH) -> imageSearchScreen.invoke()
             navItems.indexOf(NavigationItem.SAVED) -> savedScreen.invoke()
             navItems.indexOf(NavigationItem.SETTINGS) -> settingsScreen.invoke()
         }
@@ -111,7 +111,7 @@ private fun AnimatedContentContainer(
 @Preview
 private fun MainScreenPreview() {
     MainScreen(
-        searchScreen = { SearchScreen() },
+        imageSearchScreen = { ImageSearchScreenRoot() },
         savedScreen = { SavedScreen() },
         settingsScreen = { SettingsScreen() },
     )

@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
-import com.alexeybondarenko.picsearch.ui.search.SearchScreen
+import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchScreenRoot
 import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
 import com.alexeybondarenko.picsearch.ui.utils.theme.PicSearchTheme
 
@@ -16,11 +16,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             PicSearchTheme {
                 MainScreen(
-                    searchScreen = { SearchScreen() },
+                    imageSearchScreen = { ImageSearchScreenRoot() },
                     savedScreen = { SavedScreen() },
                     settingsScreen = { SettingsScreen() },
                 )
             }
         }
+
     }
 }
