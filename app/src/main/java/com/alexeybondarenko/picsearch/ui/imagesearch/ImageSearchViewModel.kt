@@ -2,13 +2,18 @@ package com.alexeybondarenko.picsearch.ui.imagesearch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexeybondarenko.domain.repository.SecondRepository
+import com.alexeybondarenko.domain.repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 
-class ImageSearchViewModel : ViewModel() {
+class ImageSearchViewModel(
+    private val userRepository: UserRepository,
+    private val secondRepository: SecondRepository,
+) : ViewModel() {
     private val viewModelState = MutableStateFlow(
         ImageSearchViewModelState()
     )
