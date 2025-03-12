@@ -4,10 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
-import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchScreenRoot
-import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
 import com.alexeybondarenko.picsearch.ui.utils.theme.PicSearchTheme
+import org.koin.compose.KoinContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -15,13 +13,10 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PicSearchTheme {
-                MainScreen(
-                    imageSearchScreen = { ImageSearchScreenRoot() },
-                    savedScreen = { SavedScreen() },
-                    settingsScreen = { SettingsScreen() },
-                )
+                KoinContext {
+                    MainScreen()
+                }
             }
         }
-
     }
 }

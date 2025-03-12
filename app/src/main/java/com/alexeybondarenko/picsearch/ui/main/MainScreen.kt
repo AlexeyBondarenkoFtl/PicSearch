@@ -1,11 +1,5 @@
 package com.alexeybondarenko.picsearch.ui.main
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -19,37 +13,62 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchScreenRoot
+import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
 import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
+import com.alexeybondarenko.picsearch.ui.utils.navigation.Routes
+
 
 @Composable
-fun MainScreen(
-    imageSearchScreen: @Composable () -> Unit,
-    savedScreen: @Composable () -> Unit,
-    settingsScreen: @Composable () -> Unit,
-) {
+fun MainScreen() {
     var selectedItemIndex by remember { mutableIntStateOf(0) }
     val navItems = listOf(NavigationItem.SEARCH, NavigationItem.SAVED, NavigationItem.SETTINGS)
 
+    val navController = rememberNavController()
+
     Scaffold(
+        content = { paddingValues ->
+            NavHost(
+                navController = navController,
+                startDestination = Routes.Search,
+                modifier = Modifier.padding(paddingValues)
+            ) {
+                composable<Routes.Search> {
+                    ImageSearchScreenRoot()
+                }
+
+                composable<Routes.Saved> {
+                    SavedScreen()
+                }
+
+                composable<Routes.Settings> {
+                    SettingsScreen()
+                }
+            }
+        },
         bottomBar = {
             BottomNavBar(
                 selectedItemIndex = selectedItemIndex,
                 navItems = navItems,
-                onClick = { newIndex -> selectedItemIndex = newIndex }
+                onClick = { newIndex ->
+                    if (selectedItemIndex == newIndex) return@BottomNavBar
+
+                    selectedItemIndex = newIndex
+
+                    val screenToNavigate: Routes? = when (newIndex) {
+                        navItems.indexOf(NavigationItem.SEARCH) -> Routes.Search
+                        navItems.indexOf(NavigationItem.SAVED) -> Routes.Saved
+                        navItems.indexOf(NavigationItem.SETTINGS) -> Routes.Settings
+                        else -> null
+                    }
+
+                    screenToNavigate?.let { navController.navigate(it) }
+                }
             )
         },
-        content = { paddingValues ->
-            AnimatedContentContainer(
-                modifier = Modifier.padding(paddingValues),
-                selectedItemIndex = selectedItemIndex,
-                navItems = navItems,
-                imageSearchScreen = imageSearchScreen,
-                savedScreen = savedScreen,
-                settingsScreen = settingsScreen,
-            )
-        }
     )
 }
 
@@ -60,7 +79,9 @@ private fun BottomNavBar(
     navItems: List<NavigationItem>,
     onClick: (Int) -> Unit,
 ) {
-    NavigationBar {
+    NavigationBar(
+        modifier = modifier
+    ) {
         navItems.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
@@ -78,41 +99,7 @@ private fun BottomNavBar(
 }
 
 @Composable
-private fun AnimatedContentContainer(
-    modifier: Modifier = Modifier,
-    selectedItemIndex: Int,
-    navItems: List<NavigationItem>,
-    imageSearchScreen: @Composable () -> Unit,
-    savedScreen: @Composable () -> Unit,
-    settingsScreen: @Composable () -> Unit,
-) {
-    AnimatedContent(
-        modifier = modifier,
-        targetState = selectedItemIndex,
-        transitionSpec = {
-            if (targetState > initialState) {
-                slideInHorizontally { height -> height } + fadeIn() togetherWith
-                        slideOutHorizontally { width -> -width }
-            } else {
-                slideInHorizontally { height -> -height } + fadeIn() togetherWith
-                        slideOutHorizontally { width -> width }
-            }.using(SizeTransform(clip = false))
-        }, label = "animated content"
-    ) { targetCount ->
-        when (targetCount) {
-            navItems.indexOf(NavigationItem.SEARCH) -> imageSearchScreen.invoke()
-            navItems.indexOf(NavigationItem.SAVED) -> savedScreen.invoke()
-            navItems.indexOf(NavigationItem.SETTINGS) -> settingsScreen.invoke()
-        }
-    }
-}
-
-@Composable
 @Preview
 private fun MainScreenPreview() {
-    MainScreen(
-        imageSearchScreen = { ImageSearchScreenRoot() },
-        savedScreen = { SavedScreen() },
-        settingsScreen = { SettingsScreen() },
-    )
+    MainScreen()
 }
