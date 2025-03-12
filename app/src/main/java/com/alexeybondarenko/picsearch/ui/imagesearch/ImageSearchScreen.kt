@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 fun ImageSearchScreen(
     uiState: ImageSearchUiState,
     onIncreaseClick: () -> Unit,
+    onGetFirstPostClick: () -> Unit,
+    onLoadPhotoClick: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         when (uiState) {
@@ -34,6 +36,18 @@ fun ImageSearchScreen(
                         onClick = onIncreaseClick,
                     ) {
                         Text("+1")
+                    }
+
+                    Button(
+                        onClick = onGetFirstPostClick,
+                    ) {
+                        Text("GetFirstPost")
+                    }
+
+                    Button(
+                        onClick = onLoadPhotoClick,
+                    ) {
+                        Text("load photo")
                     }
                 }
             }
@@ -63,6 +77,8 @@ private fun ImageSearchScreenPreview() {
             counter = 1,
             errorMessages = listOf()
         ),
-        onIncreaseClick = {}
+        onIncreaseClick = {},
+        onGetFirstPostClick = {},
+        onLoadPhotoClick = {},
     )
 }

@@ -9,8 +9,6 @@ interface UserRepository {
     fun getUsers(): List<User>
 }
 
-
-
 interface SecondRepository {
     fun someAction(): String
 }

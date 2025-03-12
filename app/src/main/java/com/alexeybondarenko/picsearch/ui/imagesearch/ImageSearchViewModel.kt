@@ -1,18 +1,28 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexeybondarenko.data.remote.ApiServiceFactory
+import com.alexeybondarenko.data.remote.TestJsonPlaceholderApi
+import com.alexeybondarenko.data.repository.PostsServiceImpl
+import com.alexeybondarenko.domain.model.PostEntity
+import com.alexeybondarenko.domain.model.SearchResultsEntity
+import com.alexeybondarenko.domain.repository.PostsService
 import com.alexeybondarenko.domain.repository.SecondRepository
 import com.alexeybondarenko.domain.repository.UserRepository
+import com.alexeybondarenko.domain.usecase.GetFirstPostUseCase
+import com.alexeybondarenko.domain.usecase.GetPhotosByQueryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ImageSearchViewModel(
-    private val userRepository: UserRepository,
-    private val secondRepository: SecondRepository,
+    private val getFirstPostUseCase: GetFirstPostUseCase,
+    private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(
         ImageSearchViewModelState()
@@ -30,7 +40,7 @@ class ImageSearchViewModel(
         setToOne()
     }
 
-    fun setToOne() {
+    private fun setToOne() {
         viewModelState.update {
             it.copy(isLoading = true)
         }
@@ -48,6 +58,35 @@ class ImageSearchViewModel(
         viewModelState.value.counter?.let { current ->
             viewModelState.update {
                 it.copy(counter = current + 1)
+            }
+        }
+    }
+
+    fun getFirstPost() {
+        viewModelScope.launch {
+            val post: PostEntity? = getFirstPostUseCase.execute()
+
+            post ?: Log.d("ImageSearchViewModel", "post is null")
+
+            post?.let {
+                Log.d(
+                    "ImageSearchViewModel",
+                    "${post.userId}, ${post.id}, ${post.title}, ${post.body}"
+                )
+            }
+        }
+    }
+
+    fun getPhotosByQuery() {
+        viewModelScope.launch {
+            try {
+                val query = "coffee"
+
+                val photos: SearchResultsEntity = getPhotosByQueryUseCase.execute(query)
+                Log.d("ImageSearchViewModel", photos.results.first().urls.small)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
