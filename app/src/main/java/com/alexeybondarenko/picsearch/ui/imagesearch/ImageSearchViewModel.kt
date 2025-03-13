@@ -3,9 +3,7 @@ package com.alexeybondarenko.picsearch.ui.imagesearch
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexeybondarenko.domain.model.PostEntity
 import com.alexeybondarenko.domain.model.SearchResultsEntity
-import com.alexeybondarenko.domain.usecase.GetFirstPostUseCase
 import com.alexeybondarenko.domain.usecase.GetPhotosByQueryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,7 +13,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ImageSearchViewModel(
-    private val getFirstPostUseCase: GetFirstPostUseCase,
     private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(
@@ -54,28 +51,14 @@ class ImageSearchViewModel(
         }
     }
 
-    fun getFirstPost() {
-        viewModelScope.launch {
-            val post: PostEntity? = getFirstPostUseCase.execute()
-
-            post ?: Log.d("ImageSearchViewModel", "post is null")
-
-            post?.let {
-                Log.d(
-                    "ImageSearchViewModel",
-                    "${post.userId}, ${post.id}, ${post.title}, ${post.body}"
-                )
-            }
-        }
-    }
-
     fun getPhotosByQuery() {
         viewModelScope.launch {
             try {
                 val query = "coffee"
 
                 val photos: SearchResultsEntity = getPhotosByQueryUseCase.execute(query)
-                Log.d("ImageSearchViewModel", photos.results.first().urls.small)
+                val smallPhotoUrl = photos.results?.first()?.urls?.small
+                Log.d("ImageSearchViewModel", smallPhotoUrl?:"")
 
             } catch (e: Exception) {
                 e.printStackTrace()

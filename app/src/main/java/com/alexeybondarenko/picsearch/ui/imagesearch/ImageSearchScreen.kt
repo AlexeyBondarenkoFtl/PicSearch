@@ -7,7 +7,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +24,6 @@ fun ImageSearchRoute(
     ImageSearchScreen(
         uiState = uiState,
         onIncreaseClick = imageSearchViewModel::increase,
-        onGetFirstPostClick = imageSearchViewModel::getFirstPost,
         onLoadPhotoClick = imageSearchViewModel::getPhotosByQuery,
     )
 
@@ -35,7 +33,6 @@ fun ImageSearchRoute(
 fun ImageSearchScreen(
     uiState: ImageSearchUiState,
     onIncreaseClick: () -> Unit,
-    onGetFirstPostClick: () -> Unit,
     onLoadPhotoClick: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -56,12 +53,6 @@ fun ImageSearchScreen(
                         onClick = onIncreaseClick,
                     ) {
                         Text("+1")
-                    }
-
-                    Button(
-                        onClick = onGetFirstPostClick,
-                    ) {
-                        Text("GetFirstPost")
                     }
 
                     Button(
@@ -98,7 +89,6 @@ private fun ImageSearchScreenPreview() {
             errorMessages = listOf()
         ),
         onIncreaseClick = {},
-        onGetFirstPostClick = {},
         onLoadPhotoClick = {},
     )
 }

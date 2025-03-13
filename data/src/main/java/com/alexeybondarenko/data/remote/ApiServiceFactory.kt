@@ -7,20 +7,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object ApiServiceFactory {
-
-    fun makeTestJsonPlaceholderApi(): TestJsonPlaceholderApi {
-
-        val baseUrl = "https://jsonplaceholder.typicode.com/"
-
-        val retrofit = Retrofit
-            .Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        return retrofit.create(TestJsonPlaceholderApi::class.java)
-    }
-
     fun makeUnsplashApi(): UnsplashApi {
         val baseUrl = "https://api.unsplash.com/"
 
