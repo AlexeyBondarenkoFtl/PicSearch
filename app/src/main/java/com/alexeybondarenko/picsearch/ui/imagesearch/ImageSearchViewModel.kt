@@ -3,14 +3,8 @@ package com.alexeybondarenko.picsearch.ui.imagesearch
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexeybondarenko.data.remote.ApiServiceFactory
-import com.alexeybondarenko.data.remote.TestJsonPlaceholderApi
-import com.alexeybondarenko.data.repository.PostsServiceImpl
 import com.alexeybondarenko.domain.model.PostEntity
 import com.alexeybondarenko.domain.model.SearchResultsEntity
-import com.alexeybondarenko.domain.repository.PostsService
-import com.alexeybondarenko.domain.repository.SecondRepository
-import com.alexeybondarenko.domain.repository.UserRepository
 import com.alexeybondarenko.domain.usecase.GetFirstPostUseCase
 import com.alexeybondarenko.domain.usecase.GetPhotosByQueryUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -32,7 +26,7 @@ class ImageSearchViewModel(
         .map(ImageSearchViewModelState::toUiState)
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.Eagerly,
+            started = SharingStarted.WhileSubscribed(5000),
             initialValue = viewModelState.value.toUiState()
         )
 
@@ -55,10 +49,8 @@ class ImageSearchViewModel(
     }
 
     fun increase() {
-        viewModelState.value.counter?.let { current ->
-            viewModelState.update {
-                it.copy(counter = current + 1)
-            }
+        viewModelState.update { current ->
+            current.copy(counter = (current.counter ?: 0) + 1)
         }
     }
 
