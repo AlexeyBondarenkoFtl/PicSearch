@@ -2,6 +2,7 @@ package com.alexeybondarenko.data.remote
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -23,6 +24,10 @@ object ApiServiceFactory {
     fun makeUnsplashApi(): UnsplashApi {
         val baseUrl = "https://api.unsplash.com/"
 
+        val loggingInterceptor = HttpLoggingInterceptor()
+        // todo rework setting of logging level
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC)
+
         val okHttpClient = OkHttpClient.Builder().apply {
             addInterceptor(
                 Interceptor { chain ->
@@ -38,6 +43,7 @@ object ApiServiceFactory {
                     return@Interceptor chain.proceed(builder.build())
                 }
             )
+            addInterceptor(loggingInterceptor)
         }.build()
 
         val retrofit = Retrofit
