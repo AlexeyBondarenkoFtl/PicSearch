@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchScreenRoot
+import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchRoute
 import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
 import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
 import com.alexeybondarenko.picsearch.ui.utils.navigation.Routes
@@ -37,7 +37,7 @@ fun MainScreen() {
                 modifier = Modifier.padding(paddingValues)
             ) {
                 composable<Routes.Search> {
-                    ImageSearchScreenRoot()
+                    ImageSearchRoute()
                 }
 
                 composable<Routes.Saved> {
@@ -58,14 +58,14 @@ fun MainScreen() {
 
                     selectedItemIndex = newIndex
 
-                    val screenToNavigate: Routes? = when (newIndex) {
+                    val route: Routes? = when (newIndex) {
                         navItems.indexOf(NavigationItem.SEARCH) -> Routes.Search
                         navItems.indexOf(NavigationItem.SAVED) -> Routes.Saved
                         navItems.indexOf(NavigationItem.SETTINGS) -> Routes.Settings
                         else -> null
                     }
 
-                    screenToNavigate?.let { navController.navigate(it) }
+                    route?.let { navController.navigate(it) }
                 }
             )
         },
