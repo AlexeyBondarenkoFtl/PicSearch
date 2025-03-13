@@ -18,6 +18,7 @@ enum class NavigationItem(
     val unselectIcon: ImageVector,
     val associatedRoute: Routes,
 ) {
+    // todo find and add unselect icon
     SEARCH(
         "Поиск",
         Icons.Filled.Search,
