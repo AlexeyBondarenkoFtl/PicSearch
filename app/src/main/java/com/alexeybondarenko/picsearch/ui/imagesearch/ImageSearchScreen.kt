@@ -20,7 +20,6 @@ fun ImageSearchRoute(
     imageSearchViewModel: ImageSearchViewModel = koinViewModel()
 ) {
 
-//    val uiState by imageSearchViewModel.uiState.collectAsState(initial = ImageSearchUiState.ImageSearchLoading)
     val uiState by imageSearchViewModel.uiState.collectAsStateWithLifecycle()
 
     ImageSearchScreen(
