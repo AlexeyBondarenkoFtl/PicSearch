@@ -9,35 +9,35 @@ import com.alexeybondarenko.domain.model.UserEntity
 import com.alexeybondarenko.domain.model.UserLinksEntity
 
 data class SearchResultsResponse(
-    val total: Int,
-    val totalPages: Int,
-    val results: List<ResultImageResponse>
+    val total: Int?,
+    val totalPages: Int?,
+    val results: List<ResultImageResponse>?
 ) {
     class EntityMapper {
         fun mapToEntity(from: SearchResultsResponse): SearchResultsEntity {
             return SearchResultsEntity(
                 total = from.total,
                 totalPages = from.totalPages,
-                results = from.results.map { ResultImageResponse.EntityMapper().mapToEntity(it) }
+                results = from.results?.map { ResultImageResponse.EntityMapper().mapToEntity(it) } ?: emptyList()
             )
         }
     }
 }
 
 data class ResultImageResponse(
-    val id: String,
-    val createdAt: String,
-    val width: Int,
-    val height: Int,
-    val color: String,
-    val blurHash: String,
-    val likes: Int,
-    val likedByUser: Boolean,
-    val description: String,
-    val user: UserResponse,
-    val currentUserCollections: List<Any>,
-    val urls: ResultImageUrlsResponse,
-    val links: ResultImageLinksResponse
+    val id: String?,
+    val createdAt: String?,
+    val width: Int?,
+    val height: Int?,
+    val color: String?,
+    val blurHash: String?,
+    val likes: Int?,
+    val likedByUser: Boolean?,
+    val description: String?,
+    val user: UserResponse?,
+    val currentUserCollections: List<Any>?,
+    val urls: ResultImageUrlsResponse?,
+    val links: ResultImageLinksResponse?
 ) {
     class EntityMapper {
         fun mapToEntity(from: ResultImageResponse): ResultImageEntity {
@@ -51,26 +51,26 @@ data class ResultImageResponse(
                 likes = from.likes,
                 likedByUser = from.likedByUser,
                 description = from.description,
-                user = UserResponse.EntityMapper().mapToEntity(from.user),
+                user = from.user?.let { UserResponse.EntityMapper().mapToEntity(it) },
                 currentUserCollections = from.currentUserCollections,
-                urls = ResultImageUrlsResponse.EntityMapper().mapToEntity(from.urls),
-                links =ResultImageLinksResponse.EntityMapper().mapToEntity(from.links),
+                urls = from.urls?.let { ResultImageUrlsResponse.EntityMapper().mapToEntity(it) },
+                links = from.links?.let { ResultImageLinksResponse.EntityMapper().mapToEntity(it) },
             )
         }
     }
 }
 
 data class UserResponse(
-    val id: String,
-    val username: String,
-    val name: String,
-    val firstName: String,
-    val lastName: String,
-    val instagramUsername: String,
-    val twitterUsername: String,
-    val portfolioUrl: String,
-    val profileImage: ProfileImageResponse,
-    val links: UserLinksResponse
+    val id: String?,
+    val username: String?,
+    val name: String?,
+    val firstName: String?,
+    val lastName: String?,
+    val instagramUsername: String?,
+    val twitterUsername: String?,
+    val portfolioUrl: String?,
+    val profileImage: ProfileImageResponse?,
+    val links: UserLinksResponse?
 ) {
     class EntityMapper {
         fun mapToEntity(from: UserResponse): UserEntity {
@@ -83,19 +83,19 @@ data class UserResponse(
                 instagramUsername = from.instagramUsername,
                 twitterUsername = from.twitterUsername,
                 portfolioUrl = from.portfolioUrl,
-                profileImage = ProfileImageResponse.EntityMapper().mapToEntity(from.profileImage),
-                links = UserLinksResponse.EntityMapper().mapToEntity(from.links),
+                profileImage = from.profileImage?.let { ProfileImageResponse.EntityMapper().mapToEntity(it) },
+                links = from.links?.let { UserLinksResponse.EntityMapper().mapToEntity(it) },
             )
         }
     }
 }
 
 data class ResultImageUrlsResponse(
-    val raw: String,
-    val full: String,
-    val regular: String,
-    val small: String,
-    val thumb: String
+    val raw: String?,
+    val full: String?,
+    val regular: String?,
+    val small: String?,
+    val thumb: String?
 ) {
     class EntityMapper {
         fun mapToEntity(from: ResultImageUrlsResponse): ResultImageUrlsEntity {
@@ -111,9 +111,9 @@ data class ResultImageUrlsResponse(
 }
 
 data class ResultImageLinksResponse(
-    val self: String,
-    val html: String,
-    val download: String
+    val self: String?,
+    val html: String?,
+    val download: String?
 ) {
     class EntityMapper {
         fun mapToEntity(from: ResultImageLinksResponse): ResultImageLinksEntity {
@@ -127,10 +127,10 @@ data class ResultImageLinksResponse(
 }
 
 data class UserLinksResponse(
-    val self: String,
-    val html: String,
-    val photos: String,
-    val likes: String
+    val self: String?,
+    val html: String?,
+    val photos: String?,
+    val likes: String?
 ) {
     class EntityMapper {
         fun mapToEntity(from: UserLinksResponse): UserLinksEntity {
@@ -145,9 +145,9 @@ data class UserLinksResponse(
 }
 
 data class ProfileImageResponse(
-    val small: String,
-    val medium: String,
-    val large: String
+    val small: String?,
+    val medium: String?,
+    val large: String?
 ) {
     class EntityMapper {
         fun mapToEntity(from: ProfileImageResponse): ProfileImageEntity {
