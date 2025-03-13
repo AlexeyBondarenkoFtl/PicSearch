@@ -2,13 +2,18 @@ package com.alexeybondarenko.picsearch.ui.utils.navigation
 
 import kotlinx.serialization.Serializable
 
-sealed class Routes {
+@Serializable
+sealed interface Routes {
     @Serializable
-    data object Search : Routes()
+    data object Search : Routes
 
     @Serializable
-    data object Saved : Routes()
+    data object Saved : Routes
 
     @Serializable
-    data object Settings : Routes()
+    data object Settings : Routes
+
+    fun getSimpleName(): String? {
+        return this::class.simpleName
+    }
 }

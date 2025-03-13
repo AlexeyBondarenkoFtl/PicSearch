@@ -11,6 +11,7 @@ import com.alexeybondarenko.domain.usecase.GetFirstPostUseCase
 import com.alexeybondarenko.domain.usecase.GetPhotosByQueryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchViewModel
 import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
@@ -20,7 +21,9 @@ val appModule = module {
 
 //    single { SomeShit(androidContext()) }
 
-    viewModel { ImageSearchViewModel(get(), get()) }
+//    viewModel { ImageSearchViewModel(get(), get()) }
+
+    viewModelOf(::ImageSearchViewModel)
 }
 
 val imageSearchModule = module {

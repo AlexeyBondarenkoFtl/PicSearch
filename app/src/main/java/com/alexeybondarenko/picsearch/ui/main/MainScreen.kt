@@ -13,21 +13,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchRoute
 import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
 import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
 import com.alexeybondarenko.picsearch.ui.utils.navigation.Routes
 
-
 @Composable
 fun MainScreen() {
-    var selectedItemIndex by remember { mutableIntStateOf(0) }
-    val navItems = listOf(NavigationItem.SEARCH, NavigationItem.SAVED, NavigationItem.SETTINGS)
-
     val navController = rememberNavController()
+
+    val navItems = remember { NavigationItem.entries }
 
     Scaffold(
         content = { paddingValues ->
@@ -51,22 +51,8 @@ fun MainScreen() {
         },
         bottomBar = {
             BottomNavBar(
-                selectedItemIndex = selectedItemIndex,
+                navController = navController,
                 navItems = navItems,
-                onClick = { newIndex ->
-                    if (selectedItemIndex == newIndex) return@BottomNavBar
-
-                    selectedItemIndex = newIndex
-
-                    val route: Routes? = when (newIndex) {
-                        navItems.indexOf(NavigationItem.SEARCH) -> Routes.Search
-                        navItems.indexOf(NavigationItem.SAVED) -> Routes.Saved
-                        navItems.indexOf(NavigationItem.SETTINGS) -> Routes.Settings
-                        else -> null
-                    }
-
-                    route?.let { navController.navigate(it) }
-                }
             )
         },
     )
@@ -74,25 +60,34 @@ fun MainScreen() {
 
 @Composable
 private fun BottomNavBar(
-    modifier: Modifier = Modifier,
-    selectedItemIndex: Int,
-    navItems: List<NavigationItem>,
-    onClick: (Int) -> Unit,
+    navController: NavController,
+    navItems: List<NavigationItem>
 ) {
-    NavigationBar(
-        modifier = modifier
-    ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    var selectedItemIndex by remember { mutableIntStateOf(0) }
+
+    NavigationBar {
         navItems.forEachIndexed { index, item ->
+            val isSelected =
+                currentDestination?.route == navItems[selectedItemIndex].associatedRoute.getSimpleName()
+
             NavigationBarItem(
                 icon = {
                     Icon(
-                        if (selectedItemIndex == index) item.selectIcon else item.unselectIcon,
+                        if (index == selectedItemIndex) item.selectIcon else item.unselectIcon,
                         contentDescription = item.label
                     )
                 },
                 label = { Text(item.label) },
-                selected = selectedItemIndex == index,
-                onClick = { onClick.invoke(index) }
+                selected = isSelected,
+                onClick = {
+                    if (selectedItemIndex == index) return@NavigationBarItem
+                    selectedItemIndex = index
+
+                    navController.navigate(item.associatedRoute)
+                }
             )
         }
     }
