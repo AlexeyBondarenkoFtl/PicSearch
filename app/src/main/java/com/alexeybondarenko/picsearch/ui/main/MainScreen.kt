@@ -14,45 +14,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchRoute
-import com.alexeybondarenko.picsearch.ui.saved.SavedScreen
-import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
-import com.alexeybondarenko.picsearch.ui.utils.navigation.Routes
 
 @Composable
 fun MainScreen() {
     val navController = rememberNavController()
 
-    val navItems = remember { NavigationItem.entries }
-
     Scaffold(
         content = { paddingValues ->
-            NavHost(
+            PicSearchNavHost(
+                modifier = Modifier.padding(paddingValues),
                 navController = navController,
-                startDestination = Routes.Search,
-                modifier = Modifier.padding(paddingValues)
-            ) {
-                composable<Routes.Search> {
-                    ImageSearchRoute()
-                }
-
-                composable<Routes.Saved> {
-                    SavedScreen()
-                }
-
-                composable<Routes.Settings> {
-                    SettingsScreen()
-                }
-            }
+            )
         },
         bottomBar = {
             BottomNavBar(
                 navController = navController,
-                navItems = navItems,
             )
         },
     )
@@ -61,10 +39,11 @@ fun MainScreen() {
 @Composable
 private fun BottomNavBar(
     navController: NavController,
-    navItems: List<NavigationItem>
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
+
+    val navItems = remember { NavigationItem.entries }
 
     var selectedItemIndex by remember { mutableIntStateOf(0) }
 
