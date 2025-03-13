@@ -34,11 +34,11 @@ object ApiServiceFactory {
 
                     val builder = chain.request().newBuilder()
                     builder.addHeader(
-                        "Authorization:",
+                        "Authorization",
                         " Client-ID H1ldbskanohKWvDjGz3U3UhdoDBp1-xx1ut6X4DukKQ"
                     )
                     builder.addHeader(
-                        "Accept-Version:", "v1"
+                        "Accept-Version", "v1"
                     )
                     return@Interceptor chain.proceed(builder.build())
                 }
