@@ -1,4 +1,4 @@
-package com.alexeybondarenko.picsearch.ui.utils
+package com.alexeybondarenko.picsearch.ui.utils.common
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,7 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
-// todo move to ReusableComposable (?) dir
 @Composable
 fun ScreenPlaceholder(
     modifier: Modifier = Modifier,
