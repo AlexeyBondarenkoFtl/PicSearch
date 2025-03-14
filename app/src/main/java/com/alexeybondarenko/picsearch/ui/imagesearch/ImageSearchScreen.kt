@@ -46,7 +46,6 @@ import org.koin.androidx.compose.koinViewModel
 fun ImageSearchRoute(
     imageSearchViewModel: ImageSearchViewModel = koinViewModel()
 ) {
-
     val uiState by imageSearchViewModel.uiState.collectAsStateWithLifecycle()
 
     ImageSearchScreen(

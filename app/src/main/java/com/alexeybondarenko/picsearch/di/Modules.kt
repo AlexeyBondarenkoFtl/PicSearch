@@ -6,6 +6,7 @@ import com.alexeybondarenko.data.repository.PhotosServiceUnsplashImpl
 import com.alexeybondarenko.domain.repository.PhotosService
 import com.alexeybondarenko.domain.usecase.GetPhotosByQueryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchViewModel
+import com.alexeybondarenko.picsearch.ui.savedimages.SavedImagesViewModel
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
@@ -26,4 +27,8 @@ val imageSearchModule = module {
 
     // Api
     single<UnsplashApi> { ApiServiceFactory.makeUnsplashApi() }
+}
+
+val savedImagesModule = module {
+    viewModelOf(::SavedImagesViewModel)
 }
