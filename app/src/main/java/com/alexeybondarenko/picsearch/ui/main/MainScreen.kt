@@ -16,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.alexeybondarenko.picsearch.ui.utils.navigation.PicSearchNavHost
 
 @Composable
 fun MainScreen() {
