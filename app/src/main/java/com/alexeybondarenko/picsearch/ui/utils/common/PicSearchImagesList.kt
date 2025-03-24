@@ -70,6 +70,7 @@ private fun PicSearchImageListPreview() {
     )
 }
 
+// todo temp fun, remove
 @Composable
 private fun BlankImage(
     name: String,
@@ -88,6 +89,7 @@ private fun BlankImage(
     }
 }
 
+// todo temp fun, remove
 private fun randFloatInRange(
     min: Float,
     max: Float,
