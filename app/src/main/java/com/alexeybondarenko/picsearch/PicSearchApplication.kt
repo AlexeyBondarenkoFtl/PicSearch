@@ -3,6 +3,7 @@ package com.alexeybondarenko.picsearch
 import android.app.Application
 import com.alexeybondarenko.picsearch.di.appModule
 import com.alexeybondarenko.picsearch.di.imageSearchModule
+import com.alexeybondarenko.picsearch.di.imageStorageModule
 import com.alexeybondarenko.picsearch.di.savedImagesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -18,6 +19,7 @@ class PicSearchApplication : Application() {
                 appModule,
                 imageSearchModule,
                 savedImagesModule,
+                imageStorageModule,
             )
         }
     }
