@@ -45,7 +45,7 @@ fun SavedImagesScreen(
 
             SavedImagesUiState.SavedImagesLoadedEmpty -> {
                 Text(
-                    text = "У тебя нет сохраненных изображений",
+                    text = "У тебя нет сохраненных изображений", // todo move to res
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
