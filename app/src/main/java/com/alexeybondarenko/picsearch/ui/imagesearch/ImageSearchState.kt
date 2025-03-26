@@ -1,20 +1,23 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
+
 data class ImageSearchViewModelState(
-    val errorMessages: List<String> = emptyList(),
+    val errorMessage: PicSearchErrorWithAction? = null,
     val isLoading: Boolean = false,
-    val counter: Int? = null
+    val searchResults: List<String>? = null,
+    val operationErrorMessage: PicSearchErrorWithAction? = null,
 ) {
-    fun toUiState(): ImageSearchUiState = if (isLoading) {
-        ImageSearchUiState.ImageSearchLoading
-    } else if (counter == null) {
-        ImageSearchUiState.ImageSearchLoadingError(
-            errorMessages = errorMessages
+    fun toUiState(): ImageSearchUiState = when {
+        isLoading -> ImageSearchUiState.ImageSearchLoading
+
+        !isLoading && errorMessage != null -> ImageSearchUiState.ImageSearchLoadingError(
+            errorMessage = errorMessage
         )
-    } else {
-        ImageSearchUiState.ImageSearchLoaded(
-            counter = counter,
-            errorMessages = errorMessages
+
+        else -> ImageSearchUiState.ImageSearchLoaded(
+            searchResults = searchResults,
+            operationErrorMessage = operationErrorMessage,
         )
     }
 }
@@ -24,11 +27,11 @@ sealed interface ImageSearchUiState {
     data object ImageSearchLoading : ImageSearchUiState
 
     data class ImageSearchLoaded(
-        val counter: Int,
-        val errorMessages: List<String> = emptyList(),
+        val searchResults: List<String>?,
+        val operationErrorMessage: PicSearchErrorWithAction?,
     ) : ImageSearchUiState
 
     data class ImageSearchLoadingError(
-        val errorMessages: List<String>,
+        val errorMessage: PicSearchErrorWithAction?,
     ) : ImageSearchUiState
 }

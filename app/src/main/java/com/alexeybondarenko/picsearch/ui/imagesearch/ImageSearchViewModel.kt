@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexeybondarenko.domain.model.SearchResultsEntity
 import com.alexeybondarenko.domain.usecase.GetPhotosByQueryUseCase
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
@@ -28,41 +29,56 @@ class ImageSearchViewModel(
         )
 
     init {
-        setToOne()
+
     }
 
-    private fun setToOne() {
-        viewModelState.update {
-            it.copy(isLoading = true)
-        }
+    fun searchByQuery(
+        query: String,
+    ) {
+        if (query.isEmpty() or query.isBlank()) return
 
-        viewModelState.update {
-            it.copy(counter = 1)
-        }
-
-        viewModelState.update {
-            it.copy(isLoading = false)
-        }
-    }
-
-    fun increase() {
-        viewModelState.update { current ->
-            current.copy(counter = (current.counter ?: 0) + 1)
-        }
-    }
-
-    fun getPhotosByQuery() {
         viewModelScope.launch {
             try {
-                val query = "coffee"
+                viewModelState.update {
+                    it.copy(isLoading = true)
+                }
 
-                val photos: SearchResultsEntity = getPhotosByQueryUseCase.execute(query)
-                val smallPhotoUrl = photos.results?.first()?.urls?.small
-                Log.d("ImageSearchViewModel", smallPhotoUrl?:"")
+                searchByQueryInternal(query)?.let { urls ->
+                    viewModelState.update {
+                        it.copy(searchResults = urls)
+                    }
+                }
 
             } catch (e: Exception) {
                 e.printStackTrace()
+
+                val error = PicSearchErrorWithAction(
+                    message = e.message,
+                    confirmAction = {
+                        viewModelState.update {
+                            it.copy(operationErrorMessage = null)
+                        }
+                    }
+                )
+                viewModelState.update {
+                    it.copy(operationErrorMessage = error)
+                }
+            } finally {
+                viewModelState.update {
+                    it.copy(isLoading = false)
+                }
             }
         }
+    }
+
+    private suspend fun searchByQueryInternal(
+        query: String,
+    ): List<String>? {
+        val photos: SearchResultsEntity = getPhotosByQueryUseCase.execute(query)
+        return photos.results?.mapNotNull { it.urls?.small }
+    }
+
+    companion object {
+        const val TAG = "ImageSearchViewModel"
     }
 }
