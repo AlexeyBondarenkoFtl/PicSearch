@@ -70,4 +70,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.core.viewmodel)
     implementation(libs.koin.androidx.compose)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }
