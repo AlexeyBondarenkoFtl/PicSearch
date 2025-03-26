@@ -1,11 +1,12 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
+import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
 
 data class ImageSearchViewModelState(
     val errorMessage: PicSearchErrorWithAction? = null,
     val isLoading: Boolean = false,
-    val searchResults: List<String>? = null,
+    val searchResults: List<ImageCard>? = null,
     val operationErrorMessage: PicSearchErrorWithAction? = null,
 ) {
     fun toUiState(): ImageSearchUiState = when {
@@ -27,7 +28,7 @@ sealed interface ImageSearchUiState {
     data object ImageSearchLoading : ImageSearchUiState
 
     data class ImageSearchLoaded(
-        val searchResults: List<String>?,
+        val searchResults: List<ImageCard>?,
         val operationErrorMessage: PicSearchErrorWithAction?,
     ) : ImageSearchUiState
 

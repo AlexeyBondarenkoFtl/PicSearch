@@ -51,10 +51,10 @@ fun SavedImagesScreen(
             }
 
             is SavedImagesUiState.SavedImagesLoaded -> {
-                PicSearchImageList(
-                    images = uiState.images,
-                    onLastItemReached = onLastItemReached,
-                )
+//                PicSearchImageList(
+//                    images = uiState.images,
+//                    onLastItemReached = onLastItemReached,
+//                )
             }
         }
     }

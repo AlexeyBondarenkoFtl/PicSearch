@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexeybondarenko.domain.model.SearchResultsEntity
 import com.alexeybondarenko.domain.usecase.GetPhotosByQueryUseCase
+import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -73,9 +74,29 @@ class ImageSearchViewModel(
 
     private suspend fun searchByQueryInternal(
         query: String,
-    ): List<String>? {
+    ): List<ImageCard>? {
         val photos: SearchResultsEntity = getPhotosByQueryUseCase.execute(query)
-        return photos.results?.mapNotNull { it.urls?.small }
+
+        return photos.results?.map { resultImageEntity ->
+            ImageCard(
+                url = resultImageEntity.urls?.full,
+                aspectRatio = calculateAspectRatio(
+                    width = resultImageEntity.width,
+                    height = resultImageEntity.height,
+                )
+            )
+        }
+    }
+
+    private fun calculateAspectRatio(
+        width: Int?,
+        height: Int?,
+    ): Float {
+        return when {
+            height == null || width == null -> 1f
+            height == 0 || width == 0 -> 1f
+            else -> width.toFloat() / height.toFloat()
+        }
     }
 
     companion object {
