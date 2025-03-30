@@ -1,8 +1,8 @@
 package com.alexeybondarenko.domain.repository
 
-import com.alexeybondarenko.domain.model.SearchResultsEntity
+import com.alexeybondarenko.domain.model.ImageEntity
 
 
 interface PhotosService {
-    suspend fun getPhotosByQuery(query: String): SearchResultsEntity
+    suspend fun getPhotosByQuery(query: String): List<ImageEntity>?
 }

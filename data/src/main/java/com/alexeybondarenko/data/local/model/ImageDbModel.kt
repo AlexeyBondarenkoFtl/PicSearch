@@ -8,8 +8,16 @@ import java.util.Date
 class ImageDbModel(
     @PrimaryKey
     val id: String,
-    val url: String,
-    val description: String,
-    val author: String,
-    val savedDate: Date,
+    val width: Int?,
+    val height: Int?,
+    val description: String?,
+
+    val authorName: String?,
+    val authorProfileImageUrl: String?,
+
+    val urlFull: String?,
+    val urlRegular: String?,
+
+    // todo ЧТО С ЭТИМ ДЕЛАТЬ??
+    val savedDate: String?,
 )

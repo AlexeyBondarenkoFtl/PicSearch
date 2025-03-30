@@ -1,30 +1,30 @@
 package com.alexeybondarenko.data.remote.response
 
-import com.alexeybondarenko.domain.model.ProfileImageEntity
-import com.alexeybondarenko.domain.model.ResultImageEntity
-import com.alexeybondarenko.domain.model.ResultImageLinksEntity
-import com.alexeybondarenko.domain.model.ResultImageUrlsEntity
-import com.alexeybondarenko.domain.model.SearchResultsEntity
-import com.alexeybondarenko.domain.model.UserEntity
-import com.alexeybondarenko.domain.model.UserLinksEntity
+import com.alexeybondarenko.domain.model.UnsplashProfileImageEntity
+import com.alexeybondarenko.domain.model.UnsplashResultImageEntity
+import com.alexeybondarenko.domain.model.UnsplashResultImageLinksEntity
+import com.alexeybondarenko.domain.model.UnsplashResultImageUrlsEntity
+import com.alexeybondarenko.domain.model.UnsplashSearchResultsEntity
+import com.alexeybondarenko.domain.model.UnsplashUserEntity
+import com.alexeybondarenko.domain.model.UnsplashUserLinksEntity
 
-data class SearchResultsResponse(
+data class UnsplashSearchResultsResponse(
     val total: Int?,
     val totalPages: Int?,
-    val results: List<ResultImageResponse>?
+    val results: List<UnsplashResultImageResponse>?
 ) {
     class EntityMapper {
-        fun mapToEntity(from: SearchResultsResponse): SearchResultsEntity {
-            return SearchResultsEntity(
+        fun mapToEntity(from: UnsplashSearchResultsResponse): UnsplashSearchResultsEntity {
+            return UnsplashSearchResultsEntity(
                 total = from.total,
                 totalPages = from.totalPages,
-                results = from.results?.map { ResultImageResponse.EntityMapper().mapToEntity(it) } ?: emptyList()
+                results = from.results?.map { UnsplashResultImageResponse.EntityMapper().mapToEntity(it) } ?: emptyList()
             )
         }
     }
 }
 
-data class ResultImageResponse(
+data class UnsplashResultImageResponse(
     val id: String?,
     val createdAt: String?,
     val width: Int?,
@@ -34,14 +34,14 @@ data class ResultImageResponse(
     val likes: Int?,
     val likedByUser: Boolean?,
     val description: String?,
-    val user: UserResponse?,
+    val user: UnsplashUserResponse?,
     val currentUserCollections: List<Any>?,
-    val urls: ResultImageUrlsResponse?,
-    val links: ResultImageLinksResponse?
+    val urls: UnsplashResultImageUrlsResponse?,
+    val links: UnsplashResultImageLinksResponse?
 ) {
     class EntityMapper {
-        fun mapToEntity(from: ResultImageResponse): ResultImageEntity {
-            return ResultImageEntity(
+        fun mapToEntity(from: UnsplashResultImageResponse): UnsplashResultImageEntity {
+            return UnsplashResultImageEntity(
                 id = from.id,
                 createdAt = from.createdAt,
                 width = from.width,
@@ -51,16 +51,16 @@ data class ResultImageResponse(
                 likes = from.likes,
                 likedByUser = from.likedByUser,
                 description = from.description,
-                user = from.user?.let { UserResponse.EntityMapper().mapToEntity(it) },
+                user = from.user?.let { UnsplashUserResponse.EntityMapper().mapToEntity(it) },
                 currentUserCollections = from.currentUserCollections,
-                urls = from.urls?.let { ResultImageUrlsResponse.EntityMapper().mapToEntity(it) },
-                links = from.links?.let { ResultImageLinksResponse.EntityMapper().mapToEntity(it) },
+                urls = from.urls?.let { UnsplashResultImageUrlsResponse.EntityMapper().mapToEntity(it) },
+                links = from.links?.let { UnsplashResultImageLinksResponse.EntityMapper().mapToEntity(it) },
             )
         }
     }
 }
 
-data class UserResponse(
+data class UnsplashUserResponse(
     val id: String?,
     val username: String?,
     val name: String?,
@@ -69,12 +69,12 @@ data class UserResponse(
     val instagramUsername: String?,
     val twitterUsername: String?,
     val portfolioUrl: String?,
-    val profileImage: ProfileImageResponse?,
-    val links: UserLinksResponse?
+    val profileImage: UnsplashProfileImageResponse?,
+    val links: UnsplashUserLinksResponse?
 ) {
     class EntityMapper {
-        fun mapToEntity(from: UserResponse): UserEntity {
-            return UserEntity(
+        fun mapToEntity(from: UnsplashUserResponse): UnsplashUserEntity {
+            return UnsplashUserEntity(
                 id = from.id,
                 username = from.username,
                 name = from.name,
@@ -83,14 +83,14 @@ data class UserResponse(
                 instagramUsername = from.instagramUsername,
                 twitterUsername = from.twitterUsername,
                 portfolioUrl = from.portfolioUrl,
-                profileImage = from.profileImage?.let { ProfileImageResponse.EntityMapper().mapToEntity(it) },
-                links = from.links?.let { UserLinksResponse.EntityMapper().mapToEntity(it) },
+                profileImage = from.profileImage?.let { UnsplashProfileImageResponse.EntityMapper().mapToEntity(it) },
+                links = from.links?.let { UnsplashUserLinksResponse.EntityMapper().mapToEntity(it) },
             )
         }
     }
 }
 
-data class ResultImageUrlsResponse(
+data class UnsplashResultImageUrlsResponse(
     val raw: String?,
     val full: String?,
     val regular: String?,
@@ -98,8 +98,8 @@ data class ResultImageUrlsResponse(
     val thumb: String?
 ) {
     class EntityMapper {
-        fun mapToEntity(from: ResultImageUrlsResponse): ResultImageUrlsEntity {
-            return ResultImageUrlsEntity(
+        fun mapToEntity(from: UnsplashResultImageUrlsResponse): UnsplashResultImageUrlsEntity {
+            return UnsplashResultImageUrlsEntity(
                 raw = from.raw,
                 full = from.full,
                 regular = from.regular,
@@ -110,14 +110,14 @@ data class ResultImageUrlsResponse(
     }
 }
 
-data class ResultImageLinksResponse(
+data class UnsplashResultImageLinksResponse(
     val self: String?,
     val html: String?,
     val download: String?
 ) {
     class EntityMapper {
-        fun mapToEntity(from: ResultImageLinksResponse): ResultImageLinksEntity {
-            return ResultImageLinksEntity(
+        fun mapToEntity(from: UnsplashResultImageLinksResponse): UnsplashResultImageLinksEntity {
+            return UnsplashResultImageLinksEntity(
                 self = from.self,
                 html = from.html,
                 download = from.download,
@@ -126,15 +126,15 @@ data class ResultImageLinksResponse(
     }
 }
 
-data class UserLinksResponse(
+data class UnsplashUserLinksResponse(
     val self: String?,
     val html: String?,
     val photos: String?,
     val likes: String?
 ) {
     class EntityMapper {
-        fun mapToEntity(from: UserLinksResponse): UserLinksEntity {
-            return UserLinksEntity(
+        fun mapToEntity(from: UnsplashUserLinksResponse): UnsplashUserLinksEntity {
+            return UnsplashUserLinksEntity(
                 self = from.self,
                 html = from.html,
                 photos = from.photos,
@@ -144,14 +144,14 @@ data class UserLinksResponse(
     }
 }
 
-data class ProfileImageResponse(
+data class UnsplashProfileImageResponse(
     val small: String?,
     val medium: String?,
     val large: String?
 ) {
     class EntityMapper {
-        fun mapToEntity(from: ProfileImageResponse): ProfileImageEntity {
-            return ProfileImageEntity(
+        fun mapToEntity(from: UnsplashProfileImageResponse): UnsplashProfileImageEntity {
+            return UnsplashProfileImageEntity(
                 small = from.small,
                 medium = from.medium,
                 large = from.large

@@ -1,11 +1,24 @@
 package com.alexeybondarenko.domain.model
 
-import java.util.Date
+open class ImageEntity(
+    open val id: String?,
+    open val width: Int?,
+    open val height: Int?,
+    open val description: String?,
+    open val user: UserEntity?,
+    open val urls: ImageUrlsEntity?,
+)
 
-data class ImageEntity(
-    val id: String,
-    val url: String,
-    val description: String,
-    val author: String,
-    val savedDate: Date,
+open class UserEntity(
+    open val name: String?,
+    open val profileImage: ProfileImageEntity?,
+)
+
+open class ImageUrlsEntity(
+    open val full: String?,
+    open val regular: String?,
+)
+
+open class ProfileImageEntity(
+    open val small: String?,
 )

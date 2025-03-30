@@ -3,8 +3,6 @@ package com.alexeybondarenko.picsearch.ui.imagesearch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexeybondarenko.domain.model.ImageEntity
-import com.alexeybondarenko.domain.model.ResultImageEntity
-import com.alexeybondarenko.domain.model.SearchResultsEntity
 import com.alexeybondarenko.domain.usecase.imagestorageservice.SaveImageToStorageUseCase
 import com.alexeybondarenko.domain.usecase.photoservice.GetPhotosByQueryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
@@ -15,8 +13,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
-import java.util.UUID
 
 class ImageSearchViewModel(
     private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
@@ -78,21 +74,10 @@ class ImageSearchViewModel(
     }
 
     // todo move method to detail image screen viewModel
-    fun saveImage(image: ResultImageEntity) {
+    fun saveImage(image: ImageEntity) {
         viewModelScope.launch {
             try {
-                // todo redo
-                val imageToSave =
-                    ImageEntity(
-                        id = UUID.randomUUID().toString(),
-                        url = image.urls?.full
-                            ?: throw Exception(message = "must have full image url"),
-                        description = image.description ?: "Blank description",
-                        author = image.user?.name ?: "Blank username",
-                        savedDate = Date()
-                    )
-                saveImageToStorageUseCase.execute(imageToSave)
-
+                saveImageToStorageUseCase.execute(image)
             } catch (e: Exception) {
                 e.printStackTrace()
 
@@ -107,9 +92,9 @@ class ImageSearchViewModel(
     private suspend fun searchByQueryInternal(
         query: String,
     ): List<ImageCard>? {
-        val photos: SearchResultsEntity = getPhotosByQueryUseCase.execute(query)
+        val photos: List<ImageEntity>? = getPhotosByQueryUseCase.execute(query)
 
-        return photos.results?.map { resultImageEntity ->
+        return photos?.map { resultImageEntity ->
             ImageCard(
                 url = resultImageEntity.urls?.regular,
                 aspectRatio = calculateAspectRatio(
