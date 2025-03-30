@@ -1,9 +1,9 @@
-package com.alexeybondarenko.domain.usecase
+package com.alexeybondarenko.domain.usecase.imagestorageservice
 
 import com.alexeybondarenko.domain.model.ImageEntity
 import com.alexeybondarenko.domain.repository.ImageStorageService
 
-class GetAllImagesFromStorage(
+class GetAllImagesFromStorageUseCase(
     private val imageStorageService: ImageStorageService
 ) {
     suspend fun execute(): List<ImageEntity> {

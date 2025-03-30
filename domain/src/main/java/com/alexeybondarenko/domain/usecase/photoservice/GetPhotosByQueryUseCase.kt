@@ -1,4 +1,4 @@
-package com.alexeybondarenko.domain.usecase
+package com.alexeybondarenko.domain.usecase.photoservice
 
 import com.alexeybondarenko.domain.model.SearchResultsEntity
 import com.alexeybondarenko.domain.repository.PhotosService
