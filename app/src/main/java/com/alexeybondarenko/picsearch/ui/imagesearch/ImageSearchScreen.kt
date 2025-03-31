@@ -51,6 +51,7 @@ fun ImageSearchRoute(
     ImageSearchScreen(
         uiState = uiState,
         onSearchClick = viewModel::searchByQuery,
+        onImageClick = viewModel::saveImage
     )
 
 }
@@ -59,6 +60,7 @@ fun ImageSearchRoute(
 fun ImageSearchScreen(
     uiState: ImageSearchUiState,
     onSearchClick: (query: String) -> Unit,
+    onImageClick: (id: String) -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -71,7 +73,10 @@ fun ImageSearchScreen(
 
         when (uiState) {
             is ImageSearchUiState.ImageSearchLoaded -> {
-                SearchResult(loadedState = uiState)
+                SearchResult(
+                    loadedState = uiState,
+                    onImageClick = onImageClick,
+                )
             }
 
             ImageSearchUiState.ImageSearchLoading -> {
@@ -144,7 +149,8 @@ fun BoxScope.PicSearchSearchBar(
 @Composable
 fun SearchResult(
     modifier: Modifier = Modifier,
-    loadedState: ImageSearchUiState.ImageSearchLoaded
+    loadedState: ImageSearchUiState.ImageSearchLoaded,
+    onImageClick: (id: String) -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -166,7 +172,8 @@ fun SearchResult(
 
             else -> {
                 SearchResultsList(
-                    searchResult = loadedState.searchResults
+                    searchResult = loadedState.searchResults,
+                    onClick = onImageClick,
                 )
             }
         }
@@ -181,10 +188,13 @@ fun SearchResult(
 private fun SearchResultsList(
     modifier: Modifier = Modifier,
     searchResult: List<ImageCard>?,
+    onClick: (id: String) -> Unit,
 ) {
     if (searchResult != null) {
         PicSearchImageList(
             images = searchResult,
+            onClick = onClick,
+            // todo не забыть
             onLastItemReached = {},
         )
     }
@@ -200,5 +210,6 @@ private fun ImageSearchScreenPreview() {
             operationErrorMessage = null
         ),
         onSearchClick = {},
+        onImageClick = {},
     )
 }

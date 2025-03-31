@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchAlertDialog
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchImageList
 import org.koin.androidx.compose.koinViewModel
 
@@ -21,14 +22,14 @@ fun SavedImagesRoute(
 
     SavedImagesScreen(
         uiState = uiState,
-        onLastItemReached = viewModel::loadNextSavedImages
+        onImageClick = viewModel::deleteImage
     )
 }
 
 @Composable
 fun SavedImagesScreen(
     uiState: SavedImagesUiState,
-    onLastItemReached: () -> Unit,
+    onImageClick: (id: String) -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         when (uiState) {
@@ -37,25 +38,44 @@ fun SavedImagesScreen(
             }
 
             is SavedImagesUiState.SavedImagesLoadingError -> {
-                Text(
-                    text = uiState.errorMessages.firstOrNull().toString(),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-            }
-
-            SavedImagesUiState.SavedImagesLoadedEmpty -> {
-                Text(
-                    text = "У тебя нет сохраненных изображений", // todo move to res
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                uiState.errorMessage?.let { error ->
+                    PicSearchAlertDialog(error = error)
+                }
             }
 
             is SavedImagesUiState.SavedImagesLoaded -> {
-//                PicSearchImageList(
-//                    images = uiState.images,
-//                    onLastItemReached = onLastItemReached,
-//                )
+                SavedImagesList(
+                    loadedState = uiState,
+                    onImageClick = onImageClick,
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun SavedImagesList(
+    modifier: Modifier = Modifier,
+    loadedState: SavedImagesUiState.SavedImagesLoaded,
+    onImageClick: (id: String) -> Unit,
+) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        if (loadedState.savedImages.isNullOrEmpty()) {
+            Text(
+                text = "У тебя нет сохраненных изображений",
+                modifier = Modifier.align(Alignment.Center)
+            )
+        } else {
+            PicSearchImageList(
+                images = loadedState.savedImages,
+                onClick = onImageClick,
+            )
+        }
+
+        loadedState.operationErrorMessage?.let { error ->
+            PicSearchAlertDialog(error = error)
         }
     }
 }
@@ -65,8 +85,9 @@ fun SavedImagesScreen(
 private fun SavedImagesScreenPreview() {
     SavedImagesScreen(
         uiState = SavedImagesUiState.SavedImagesLoaded(
-            images = listOf("1", "2")
+            savedImages = null,
+            operationErrorMessage = null
         ),
-        onLastItemReached = {}
+        onImageClick = {}
     )
 }

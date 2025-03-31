@@ -16,6 +16,9 @@ interface ImageDao {
     @Query("SELECT * FROM images WHERE id=:id")
     suspend fun getImageById(id: String): ImageDbModel
 
+    @Query("DELETE FROM images WHERE id=:id")
+    suspend fun deleteImageById(id: String)
+
     @Query("DELETE FROM images")
     suspend fun deleteAll()
 }

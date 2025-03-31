@@ -9,5 +9,7 @@ interface ImageStorageService {
 
     suspend fun getImageById(id: String): ImageEntity
 
+    suspend fun deleteImageById(id: String)
+
     suspend fun deleteAllImages()
 }

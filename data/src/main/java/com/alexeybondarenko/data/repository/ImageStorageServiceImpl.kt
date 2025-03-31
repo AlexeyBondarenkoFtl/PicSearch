@@ -26,6 +26,10 @@ class ImageStorageServiceImpl(
         return imageDbModelMapper.mapToEntity(imageDbModel)
     }
 
+    override suspend fun deleteImageById(id: String) {
+        imageDao.deleteImageById(id)
+    }
+
     override suspend fun deleteAllImages() {
         imageDao.deleteAll()
     }

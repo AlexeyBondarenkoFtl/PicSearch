@@ -1,5 +1,6 @@
 package com.alexeybondarenko.picsearch.ui.utils.common
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -27,7 +28,8 @@ import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 fun PicSearchImageList(
     modifier: Modifier = Modifier,
     images: List<ImageCard>,
-    onLastItemReached: () -> Unit,
+    onClick: (id: String) -> Unit,
+    onLastItemReached: () -> Unit = {},
 ) {
     val state = rememberLazyStaggeredGridState()
     val isLastReached by remember {
@@ -49,7 +51,8 @@ fun PicSearchImageList(
     ) {
         items(images) { image ->
             ImageCard(
-                image = image
+                image = image,
+                onClick = onClick,
             )
         }
 
@@ -62,12 +65,16 @@ fun PicSearchImageList(
 @Composable
 private fun ImageCard(
     image: ImageCard,
+    onClick: (id: String) -> Unit,
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(12.dp))
             .aspectRatio(image.aspectRatio)
+            .clickable {
+                image.id?.let { onClick.invoke(it) }
+            }
     ) {
         AsyncImage(
             model = image.url,
@@ -83,6 +90,7 @@ private fun ImageCard(
 private fun PicSearchImageListPreview() {
     PicSearchImageList(
         images = listOf(),
+        onClick = {},
         onLastItemReached = {}
     )
 }

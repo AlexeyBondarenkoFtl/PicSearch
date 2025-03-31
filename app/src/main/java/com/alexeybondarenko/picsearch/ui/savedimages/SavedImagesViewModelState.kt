@@ -1,21 +1,24 @@
 package com.alexeybondarenko.picsearch.ui.savedimages
 
+import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
+
 data class SavedImagesViewModelState(
-    val errorMessages: List<String> = emptyList(),
+    val errorMessage: PicSearchErrorWithAction? = null,
     val isLoading: Boolean = false,
-    val images: List<String>? = null
+    val savedImages: List<ImageCard>? = null,
+    val operationErrorMessage: PicSearchErrorWithAction? = null,
 ) {
     fun toUiState(): SavedImagesUiState = when {
         isLoading -> SavedImagesUiState.SavedImagesLoading
 
-        images == null -> SavedImagesUiState.SavedImagesLoadingError(
-            errorMessages = errorMessages
+        !isLoading && errorMessage != null -> SavedImagesUiState.SavedImagesLoadingError(
+            errorMessage = errorMessage
         )
 
-        images.isEmpty() -> SavedImagesUiState.SavedImagesLoadedEmpty
-
         else -> SavedImagesUiState.SavedImagesLoaded(
-            images = images
+            savedImages = savedImages,
+            operationErrorMessage = operationErrorMessage,
         )
     }
 }
@@ -24,12 +27,11 @@ sealed interface SavedImagesUiState {
     data object SavedImagesLoading : SavedImagesUiState
 
     data class SavedImagesLoaded(
-        val images: List<String>,
+        val savedImages: List<ImageCard>?,
+        val operationErrorMessage: PicSearchErrorWithAction?,
     ) : SavedImagesUiState
 
-    data object SavedImagesLoadedEmpty : SavedImagesUiState
-
     data class SavedImagesLoadingError(
-        val errorMessages: List<String> = emptyList(),
+        val errorMessage: PicSearchErrorWithAction?,
     ) : SavedImagesUiState
 }

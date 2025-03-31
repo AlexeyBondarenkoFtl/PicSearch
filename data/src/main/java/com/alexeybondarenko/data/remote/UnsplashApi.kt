@@ -1,7 +1,9 @@
 package com.alexeybondarenko.data.remote
 
+import com.alexeybondarenko.data.remote.response.UnsplashResultImageResponse
 import com.alexeybondarenko.data.remote.response.UnsplashSearchResultsResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface UnsplashApi {
@@ -11,4 +13,9 @@ interface UnsplashApi {
         @Query("query") query: String,
 //        @Query("page") page: String? = null,
     ): UnsplashSearchResultsResponse
+
+    @GET("/photos/{id}")
+    suspend fun getPhotoById(
+        @Path("id") id: String,
+    ): UnsplashResultImageResponse
 }

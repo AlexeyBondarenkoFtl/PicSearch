@@ -1,6 +1,7 @@
 package com.alexeybondarenko.data.repository
 
 import com.alexeybondarenko.data.remote.UnsplashApi
+import com.alexeybondarenko.data.remote.response.UnsplashResultImageResponse
 import com.alexeybondarenko.data.remote.response.UnsplashSearchResultsResponse
 import com.alexeybondarenko.domain.model.ImageEntity
 import com.alexeybondarenko.domain.repository.PhotosService
@@ -15,5 +16,13 @@ class PhotosServiceUnsplashImpl(
         val unsplashSearchResultEntity = mapper.mapToEntity(result)
 
         return unsplashSearchResultEntity.results?.map { it }
+    }
+
+    override suspend fun getPhotoById(id: String): ImageEntity? {
+        val mapper = UnsplashResultImageResponse.EntityMapper()
+
+        val result = unsplashApi.getPhotoById(id)
+
+        return mapper.mapToEntity(result)
     }
 }

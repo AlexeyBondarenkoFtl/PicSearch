@@ -1,11 +1,14 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexeybondarenko.domain.model.ImageEntity
 import com.alexeybondarenko.domain.usecase.imagestorageservice.SaveImageToStorageUseCase
+import com.alexeybondarenko.domain.usecase.photoservice.GetPhotoByIdUseCase
 import com.alexeybondarenko.domain.usecase.photoservice.GetPhotosByQueryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
+import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,6 +20,7 @@ import kotlinx.coroutines.launch
 class ImageSearchViewModel(
     private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
     private val saveImageToStorageUseCase: SaveImageToStorageUseCase,
+    private val getPhotoByIdUseCase: GetPhotoByIdUseCase,
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(
         ImageSearchViewModelState()
@@ -74,14 +78,22 @@ class ImageSearchViewModel(
     }
 
     // todo move method to detail image screen viewModel
-    fun saveImage(image: ImageEntity) {
+    fun saveImage(id: String) {
         viewModelScope.launch {
             try {
-                saveImageToStorageUseCase.execute(image)
+                val image: ImageEntity? = getPhotoByIdUseCase.execute(id)
+
+                image?.let { saveImageToStorageUseCase.execute(it) }
             } catch (e: Exception) {
                 e.printStackTrace()
 
-                val error = PicSearchErrorWithAction(message = e.message)
+                val error = PicSearchErrorWithAction(
+                    message = e.message,
+                    confirmAction = {
+                        viewModelState.update {
+                            it.copy(operationErrorMessage = null)
+                        }
+                    })
                 viewModelState.update {
                     it.copy(operationErrorMessage = error)
                 }
@@ -94,27 +106,19 @@ class ImageSearchViewModel(
     ): List<ImageCard>? {
         val photos: List<ImageEntity>? = getPhotosByQueryUseCase.execute(query)
 
-        return photos?.map { resultImageEntity ->
+        return photos?.map { imageEntity ->
             ImageCard(
-                url = resultImageEntity.urls?.regular,
+                id = imageEntity.id,
+                url = imageEntity.urls?.regular,
                 aspectRatio = calculateAspectRatio(
-                    width = resultImageEntity.width,
-                    height = resultImageEntity.height,
+                    width = imageEntity.width,
+                    height = imageEntity.height,
                 )
             )
         }
     }
 
-    private fun calculateAspectRatio(
-        width: Int?,
-        height: Int?,
-    ): Float {
-        return when {
-            height == null || width == null -> 1f
-            height == 0 || width == 0 -> 1f
-            else -> width.toFloat() / height.toFloat()
-        }
-    }
+
 
     companion object {
         const val TAG = "ImageSearchViewModel"

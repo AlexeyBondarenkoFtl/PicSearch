@@ -8,9 +8,11 @@ import com.alexeybondarenko.data.repository.ImageStorageServiceImpl
 import com.alexeybondarenko.data.repository.PhotosServiceUnsplashImpl
 import com.alexeybondarenko.domain.repository.*
 import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteAllImagesInStorageUseCase
+import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteImageByIdFromStorageUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.GetAllImagesFromStorageUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.GetImageByIdFromStorageUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.SaveImageToStorageUseCase
+import com.alexeybondarenko.domain.usecase.photoservice.GetPhotoByIdUseCase
 import com.alexeybondarenko.domain.usecase.photoservice.GetPhotosByQueryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchViewModel
 import com.alexeybondarenko.picsearch.ui.savedimages.SavedImagesViewModel
@@ -29,6 +31,7 @@ val imageSearchModule = module {
 
     // Use cases
     single { GetPhotosByQueryUseCase(get()) }
+    single { GetPhotoByIdUseCase(get()) }
 
     // Service
     single<PhotosService> { PhotosServiceUnsplashImpl(get()) }
@@ -43,6 +46,7 @@ val savedImagesModule = module {
 
 val imageStorageModule = module {
     singleOf(::DeleteAllImagesInStorageUseCase)
+    singleOf(::DeleteImageByIdFromStorageUseCase)
     singleOf(::GetAllImagesFromStorageUseCase)
     singleOf(::GetImageByIdFromStorageUseCase)
     singleOf(::SaveImageToStorageUseCase)
