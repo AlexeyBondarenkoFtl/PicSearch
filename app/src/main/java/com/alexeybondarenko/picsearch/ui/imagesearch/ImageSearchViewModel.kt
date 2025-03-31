@@ -1,13 +1,16 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
-import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexeybondarenko.domain.model.ImageEntity
+import com.alexeybondarenko.domain.model.SearchHistoryEntryEntity
 import com.alexeybondarenko.domain.usecase.imagestorageservice.SaveImageToStorageUseCase
 import com.alexeybondarenko.domain.usecase.photoservice.GetPhotoByIdUseCase
 import com.alexeybondarenko.domain.usecase.photoservice.GetPhotosByQueryUseCase
+import com.alexeybondarenko.domain.usecase.searchhistoryservice.GetAllSearchHistoryEntriesUseCase
+import com.alexeybondarenko.domain.usecase.searchhistoryservice.SaveQueryToSearchHistoryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
+import com.alexeybondarenko.picsearch.ui.imagesearch.data.SearchHistoryItem
 import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +24,8 @@ class ImageSearchViewModel(
     private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
     private val saveImageToStorageUseCase: SaveImageToStorageUseCase,
     private val getPhotoByIdUseCase: GetPhotoByIdUseCase,
+    private val getAllSearchHistoryEntriesUseCase: GetAllSearchHistoryEntriesUseCase,
+    private val saveQueryToSearchHistoryUseCase: SaveQueryToSearchHistoryUseCase,
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(
         ImageSearchViewModelState()
@@ -34,8 +39,18 @@ class ImageSearchViewModel(
             initialValue = viewModelState.value.toUiState()
         )
 
-    init {
+    private val searchHistoryState = MutableStateFlow<List<SearchHistoryItem>>(emptyList())
 
+    val searchHistoryUiState = searchHistoryState
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
+
+
+    init {
+        updateSearchHistory()
     }
 
     fun searchByQuery(
@@ -55,24 +70,18 @@ class ImageSearchViewModel(
                     }
                 }
 
-            } catch (e: Exception) {
-                e.printStackTrace()
-
-                val error = PicSearchErrorWithAction(
-                    message = e.message,
-                    confirmAction = {
-                        viewModelState.update {
-                            it.copy(operationErrorMessage = null)
-                        }
-                    }
+                saveQueryToSearchHistoryUseCase.execute(
+                    searchHistoryEntryEntity = SearchHistoryEntryEntity(query)
                 )
-                viewModelState.update {
-                    it.copy(operationErrorMessage = error)
-                }
+
+            } catch (e: Exception) {
+                handleException(e)
             } finally {
                 viewModelState.update {
                     it.copy(isLoading = false)
                 }
+
+                updateSearchHistory()
             }
         }
     }
@@ -85,18 +94,7 @@ class ImageSearchViewModel(
 
                 image?.let { saveImageToStorageUseCase.execute(it) }
             } catch (e: Exception) {
-                e.printStackTrace()
-
-                val error = PicSearchErrorWithAction(
-                    message = e.message,
-                    confirmAction = {
-                        viewModelState.update {
-                            it.copy(operationErrorMessage = null)
-                        }
-                    })
-                viewModelState.update {
-                    it.copy(operationErrorMessage = error)
-                }
+                handleException(e)
             }
         }
     }
@@ -118,7 +116,35 @@ class ImageSearchViewModel(
         }
     }
 
+    private fun updateSearchHistory() {
+        viewModelScope.launch {
+            try {
+                val searchHistoryEntries = getAllSearchHistoryEntriesUseCase.execute()
 
+                searchHistoryState.update {
+                    searchHistoryEntries.map { SearchHistoryItem(it.query) }
+                }
+
+            } catch (e: Exception) {
+                handleException(e)
+            }
+        }
+    }
+
+    private fun handleException(e: Exception) {
+        e.printStackTrace()
+
+        val error = PicSearchErrorWithAction(
+            message = e.message,
+            confirmAction = {
+                viewModelState.update {
+                    it.copy(operationErrorMessage = null)
+                }
+            })
+        viewModelState.update {
+            it.copy(operationErrorMessage = error)
+        }
+    }
 
     companion object {
         const val TAG = "ImageSearchViewModel"

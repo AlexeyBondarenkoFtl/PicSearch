@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
+import com.alexeybondarenko.picsearch.ui.imagesearch.data.SearchHistoryItem
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchAlertDialog
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchImageList
 import org.koin.androidx.compose.koinViewModel
@@ -47,9 +48,11 @@ fun ImageSearchRoute(
     viewModel: ImageSearchViewModel = koinViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val searchHistoryUiState by viewModel.searchHistoryUiState.collectAsStateWithLifecycle()
 
     ImageSearchScreen(
         uiState = uiState,
+        searchHistory = searchHistoryUiState,
         onSearchClick = viewModel::searchByQuery,
         onImageClick = viewModel::saveImage
     )
@@ -59,6 +62,7 @@ fun ImageSearchRoute(
 @Composable
 fun ImageSearchScreen(
     uiState: ImageSearchUiState,
+    searchHistory: List<SearchHistoryItem>,
     onSearchClick: (query: String) -> Unit,
     onImageClick: (id: String) -> Unit,
 ) {
@@ -68,6 +72,7 @@ fun ImageSearchScreen(
             .semantics { isTraversalGroup = true }
     ) {
         PicSearchSearchBar(
+            searchHistory = searchHistory,
             onSearchClick = onSearchClick,
         )
 
@@ -96,6 +101,7 @@ fun ImageSearchScreen(
 @Composable
 fun BoxScope.PicSearchSearchBar(
     modifier: Modifier = Modifier,
+    searchHistory: List<SearchHistoryItem>,
     onSearchClick: (query: String) -> Unit,
 ) {
     val textFieldState = rememberTextFieldState()
@@ -125,17 +131,16 @@ fun BoxScope.PicSearchSearchBar(
     ) {
         // Suggestions
         Column(Modifier.verticalScroll(rememberScrollState())) {
-            repeat(4) { idx ->
-                val resultText = "Suggestion $idx"
+            searchHistory.forEach { historyItem ->
                 ListItem(
-                    headlineContent = { Text(resultText) },
+                    headlineContent = { Text(historyItem.entry) },
                     supportingContent = { Text("Additional info") },
                     leadingContent = { Icon(Icons.Filled.Star, contentDescription = null) },
                     colors = ListItemDefaults.colors(containerColor = Color.Transparent),
                     modifier =
                         Modifier
                             .clickable {
-                                textFieldState.setTextAndPlaceCursorAtEnd(resultText)
+                                textFieldState.setTextAndPlaceCursorAtEnd(historyItem.entry)
                                 expanded = false
                             }
                             .fillMaxWidth()
@@ -209,6 +214,7 @@ private fun ImageSearchScreenPreview() {
             searchResults = null,
             operationErrorMessage = null
         ),
+        searchHistory = emptyList(),
         onSearchClick = {},
         onImageClick = {},
     )

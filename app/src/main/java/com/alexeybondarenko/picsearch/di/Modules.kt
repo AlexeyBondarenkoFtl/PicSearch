@@ -2,10 +2,12 @@ package com.alexeybondarenko.picsearch.di
 
 import com.alexeybondarenko.data.local.PicSearchDatabase
 import com.alexeybondarenko.data.local.dao.ImageDao
+import com.alexeybondarenko.data.local.dao.SearchHistoryDao
 import com.alexeybondarenko.data.remote.ApiServiceFactory
 import com.alexeybondarenko.data.remote.UnsplashApi
 import com.alexeybondarenko.data.repository.ImageStorageServiceImpl
 import com.alexeybondarenko.data.repository.PhotosServiceUnsplashImpl
+import com.alexeybondarenko.data.repository.SearchHistoryServiceImpl
 import com.alexeybondarenko.domain.repository.*
 import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteAllImagesInStorageUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteImageByIdFromStorageUseCase
@@ -14,6 +16,8 @@ import com.alexeybondarenko.domain.usecase.imagestorageservice.GetImageByIdFromS
 import com.alexeybondarenko.domain.usecase.imagestorageservice.SaveImageToStorageUseCase
 import com.alexeybondarenko.domain.usecase.photoservice.GetPhotoByIdUseCase
 import com.alexeybondarenko.domain.usecase.photoservice.GetPhotosByQueryUseCase
+import com.alexeybondarenko.domain.usecase.searchhistoryservice.GetAllSearchHistoryEntriesUseCase
+import com.alexeybondarenko.domain.usecase.searchhistoryservice.SaveQueryToSearchHistoryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchViewModel
 import com.alexeybondarenko.picsearch.ui.savedimages.SavedImagesViewModel
 import org.koin.android.ext.koin.androidContext
@@ -25,23 +29,22 @@ val appModule = module {
 
 }
 
-val imageSearchModule = module {
-    // ViewModels
+val imageSearchScreenModule = module {
     viewModelOf(::ImageSearchViewModel)
-
-    // Use cases
-    single { GetPhotosByQueryUseCase(get()) }
-    single { GetPhotoByIdUseCase(get()) }
-
-    // Service
-    single<PhotosService> { PhotosServiceUnsplashImpl(get()) }
-
-    // Api
-    single<UnsplashApi> { ApiServiceFactory.makeUnsplashApi() }
 }
 
-val savedImagesModule = module {
+val savedImagesScreenModule = module {
     viewModelOf(::SavedImagesViewModel)
+}
+
+val imageSearchModule = module {
+    singleOf(::GetPhotosByQueryUseCase)
+    singleOf(::GetPhotoByIdUseCase)
+
+    single<PhotosService> { PhotosServiceUnsplashImpl(get()) }
+
+    // todo заменить на factory реализацию с выбором апи в зависимости от настроек
+    single<UnsplashApi> { ApiServiceFactory.makeUnsplashApi() }
 }
 
 val imageStorageModule = module {
@@ -57,6 +60,21 @@ val imageStorageModule = module {
         val dataBase = get<PicSearchDatabase>()
         dataBase.imageDao()
     }
+}
 
+val searchHistoryModule = module {
+    singleOf(::GetAllSearchHistoryEntriesUseCase)
+    singleOf(::SaveQueryToSearchHistoryUseCase)
+
+    single<SearchHistoryService> { SearchHistoryServiceImpl(get()) }
+
+    single<SearchHistoryDao> {
+        val dataBase = get<PicSearchDatabase>()
+        dataBase.searchHistoryDao()
+    }
+}
+
+val databaseModule = module {
     single<PicSearchDatabase> { PicSearchDatabase.getInstance(androidContext()) }
 }
+

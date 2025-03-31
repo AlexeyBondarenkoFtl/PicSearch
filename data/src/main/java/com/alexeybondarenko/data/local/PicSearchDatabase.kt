@@ -5,17 +5,21 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.alexeybondarenko.data.local.dao.ImageDao
+import com.alexeybondarenko.data.local.dao.SearchHistoryDao
 import com.alexeybondarenko.data.local.model.ImageDbModel
+import com.alexeybondarenko.data.local.model.SearchHistoryEntryDbModel
 
 @Database(
     entities = [
         ImageDbModel::class,
+        SearchHistoryEntryDbModel::class,
     ],
-    version = 1
+    version = 2
 )
 abstract class PicSearchDatabase : RoomDatabase() {
 
     abstract fun imageDao(): ImageDao
+    abstract fun searchHistoryDao(): SearchHistoryDao
 
     companion object {
         @Volatile
