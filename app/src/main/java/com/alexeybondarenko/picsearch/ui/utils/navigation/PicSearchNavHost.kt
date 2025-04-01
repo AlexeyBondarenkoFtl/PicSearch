@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchRoute
 import com.alexeybondarenko.picsearch.ui.savedimages.SavedImagesRoute
-import com.alexeybondarenko.picsearch.ui.settings.SettingsScreen
+import com.alexeybondarenko.picsearch.ui.settings.SettingsRoute
 
 @Composable
 fun PicSearchNavHost(
@@ -28,7 +28,7 @@ fun PicSearchNavHost(
         }
 
         composable<Routes.Settings> {
-            SettingsScreen()
+            SettingsRoute()
         }
     }
 }

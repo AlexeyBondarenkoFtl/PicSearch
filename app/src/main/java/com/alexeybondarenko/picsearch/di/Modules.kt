@@ -20,6 +20,7 @@ import com.alexeybondarenko.domain.usecase.searchhistoryservice.GetAllSearchHist
 import com.alexeybondarenko.domain.usecase.searchhistoryservice.SaveQueryToSearchHistoryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchViewModel
 import com.alexeybondarenko.picsearch.ui.savedimages.SavedImagesViewModel
+import com.alexeybondarenko.picsearch.ui.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -35,6 +36,10 @@ val imageSearchScreenModule = module {
 
 val savedImagesScreenModule = module {
     viewModelOf(::SavedImagesViewModel)
+}
+
+val settingScreenModule = module {
+    viewModelOf(::SettingsViewModel)
 }
 
 val imageSearchModule = module {

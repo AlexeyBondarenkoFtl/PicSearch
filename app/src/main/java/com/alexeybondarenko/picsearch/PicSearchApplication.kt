@@ -8,6 +8,7 @@ import com.alexeybondarenko.picsearch.di.imageSearchScreenModule
 import com.alexeybondarenko.picsearch.di.imageStorageModule
 import com.alexeybondarenko.picsearch.di.savedImagesScreenModule
 import com.alexeybondarenko.picsearch.di.searchHistoryModule
+import com.alexeybondarenko.picsearch.di.settingScreenModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.GlobalContext.startKoin
@@ -22,6 +23,7 @@ class PicSearchApplication : Application() {
                 appModule,
                 imageSearchScreenModule,
                 savedImagesScreenModule,
+                settingScreenModule,
                 imageSearchModule,
                 imageStorageModule,
                 searchHistoryModule,
