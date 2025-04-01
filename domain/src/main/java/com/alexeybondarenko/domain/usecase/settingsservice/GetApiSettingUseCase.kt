@@ -7,10 +7,14 @@ import com.alexeybondarenko.domain.repository.SettingsService
 class GetApiSettingUseCase(
     private val settingsService: SettingsService,
 ) {
-    fun execute() {
-        settingsService.getSetting(
+    private val defValue = ApiSettingEntity.UNSPLASH
+
+    fun execute(): ApiSettingEntity {
+        val setting = settingsService.getSetting(
             key = SettingKeyEntity.API,
-            defValue = ApiSettingEntity.UNSPLASH,
+            defValue = defValue,
         )
+
+        return setting as? ApiSettingEntity ?: defValue
     }
 }
