@@ -2,6 +2,7 @@ package com.alexeybondarenko.picsearch
 
 import android.app.Application
 import com.alexeybondarenko.picsearch.di.appModule
+import com.alexeybondarenko.picsearch.di.appSettingsModule
 import com.alexeybondarenko.picsearch.di.databaseModule
 import com.alexeybondarenko.picsearch.di.imageSearchModule
 import com.alexeybondarenko.picsearch.di.imageSearchScreenModule
@@ -27,6 +28,7 @@ class PicSearchApplication : Application() {
                 imageSearchModule,
                 imageStorageModule,
                 searchHistoryModule,
+                appSettingsModule,
                 databaseModule
             )
         }
