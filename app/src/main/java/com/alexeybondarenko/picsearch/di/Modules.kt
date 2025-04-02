@@ -10,6 +10,7 @@ import com.alexeybondarenko.data.repository.PhotosServiceUnsplashImpl
 import com.alexeybondarenko.data.repository.SearchHistoryServiceImpl
 import com.alexeybondarenko.data.repository.SettingsServiceImpl
 import com.alexeybondarenko.domain.repository.*
+import com.alexeybondarenko.domain.usecase.imagestorageservice.CheckIsImageStorageEmptyUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteAllImagesInStorageUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteImageByIdFromStorageUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.GetAllImagesFromStorageUseCase
@@ -60,6 +61,7 @@ val imageSearchModule = module {
 }
 
 val imageStorageModule = module {
+    singleOf(::CheckIsImageStorageEmptyUseCase)
     singleOf(::DeleteAllImagesInStorageUseCase)
     singleOf(::DeleteImageByIdFromStorageUseCase)
     singleOf(::GetAllImagesFromStorageUseCase)
