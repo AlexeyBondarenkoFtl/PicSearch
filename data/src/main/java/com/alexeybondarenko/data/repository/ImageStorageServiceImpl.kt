@@ -34,4 +34,8 @@ class ImageStorageServiceImpl(
         imageDao.deleteAll()
     }
 
+    override suspend fun isStorageEmpty(): Boolean {
+        return imageDao.getImages().isEmpty()
+    }
+
 }

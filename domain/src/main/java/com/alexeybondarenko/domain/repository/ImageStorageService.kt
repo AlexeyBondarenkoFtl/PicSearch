@@ -12,4 +12,6 @@ interface ImageStorageService {
     suspend fun deleteImageById(id: String)
 
     suspend fun deleteAllImages()
+
+    suspend fun isStorageEmpty(): Boolean
 }

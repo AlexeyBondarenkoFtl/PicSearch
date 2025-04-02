@@ -6,6 +6,6 @@ class DeleteImageByIdFromStorageUseCase(
     private val imageStorageService: ImageStorageService
 ) {
     suspend fun execute(id: String) {
-        return imageStorageService.deleteImageById(id)
+        imageStorageService.deleteImageById(id)
     }
 }
