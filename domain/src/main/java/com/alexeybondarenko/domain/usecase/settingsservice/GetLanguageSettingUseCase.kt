@@ -7,7 +7,7 @@ import com.alexeybondarenko.domain.repository.SettingsService
 class GetLanguageSettingUseCase(
     private val settingsService: SettingsService,
 ) {
-    private val defValue = LanguageSettingEntity.RU
+    private val defValue = SettingsService.languageDefault
 
     fun execute(): LanguageSettingEntity {
         val setting = settingsService.getSetting(

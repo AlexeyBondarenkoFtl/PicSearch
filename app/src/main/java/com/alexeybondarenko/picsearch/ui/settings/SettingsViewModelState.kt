@@ -1,10 +1,40 @@
 package com.alexeybondarenko.picsearch.ui.settings
 
+import com.alexeybondarenko.domain.repository.SettingsService
+import com.alexeybondarenko.picsearch.ui.settings.utils.ApiSelectionMapper
+import com.alexeybondarenko.picsearch.ui.settings.utils.LanguageSelectionMapper
+import com.alexeybondarenko.picsearch.ui.settings.utils.ThemeSelectionMapper
+
 data class SettingsViewModelState(
-    val currentApi: ApiSelection = ApiSelection.UNSPLASH,
-    val currentTheme: ThemeSelection = ThemeSelection.LIGHT,
-    val currentLanguage: LanguageSelection = LanguageSelection.RU,
-)
+    val currentApi: ApiSelection = api,
+    val currentTheme: ThemeSelection = theme,
+    val currentLanguage: LanguageSelection = language,
+) {
+    fun toUiState(): SettingsUiState = SettingsUiState.SettingsLoaded(
+        currentApi = currentApi,
+        currentTheme = currentTheme,
+        currentLanguage = currentLanguage,
+    )
+
+    companion object DefaultSettings {
+        private val apiMapper = ApiSelectionMapper()
+        private val themeMapper = ThemeSelectionMapper()
+        private val languageMapper = LanguageSelectionMapper()
+
+        private val api = apiMapper.mapFromEntity(SettingsService.DefaultSettings.apiDefault)
+        private val theme = themeMapper.mapFromEntity(SettingsService.DefaultSettings.themeDefault)
+        private val language =
+            languageMapper.mapFromEntity(SettingsService.DefaultSettings.languageDefault)
+    }
+}
+
+sealed interface SettingsUiState {
+    data class SettingsLoaded(
+        val currentApi: ApiSelection,
+        val currentTheme: ThemeSelection,
+        val currentLanguage: LanguageSelection,
+    ) : SettingsUiState
+}
 
 interface Selection {
     val title: String

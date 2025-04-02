@@ -1,6 +1,5 @@
 package com.alexeybondarenko.picsearch.ui.settings
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,9 +14,6 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
@@ -44,7 +40,7 @@ fun SettingsRoute(
 @Composable
 fun SettingsScreen(
     modifier: Modifier = Modifier,
-    uiState: SettingsViewModelState,
+    uiState: SettingsUiState,
     onApiSelected: (selectedOption: ApiSelection) -> Unit,
     onThemeSelected: (selectedOption: ThemeSelection) -> Unit,
     onLanguageSelected: (selectedOption: LanguageSelection) -> Unit,
@@ -52,44 +48,37 @@ fun SettingsScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-
-        var selectedApi by remember { mutableStateOf(uiState.currentApi) }
-        var selectedTheme by remember { mutableStateOf(uiState.currentTheme) }
-        var selectedLanguage by remember { mutableStateOf(uiState.currentLanguage) }
+        uiState as SettingsUiState.SettingsLoaded
 
         RadioButtonSelection(
             label = "Select API", // todo move to res
             options = ApiSelection.entries,
-            selectedOption = selectedApi,
+            selectedOption = uiState.currentApi,
             onOptionSelected = { newSelectedApi ->
-                selectedApi = newSelectedApi as ApiSelection
-                onApiSelected.invoke(newSelectedApi)
+                onApiSelected.invoke(newSelectedApi as ApiSelection)
             }
         )
 
         RadioButtonSelection(
             label = "Select Theme", // todo move to res
             options = ThemeSelection.entries,
-            selectedOption = selectedTheme,
+            selectedOption = uiState.currentTheme,
             onOptionSelected = { newSelectedTheme ->
-                selectedTheme = newSelectedTheme as ThemeSelection
-                onThemeSelected.invoke(newSelectedTheme)
+                onThemeSelected.invoke(newSelectedTheme as ThemeSelection)
             }
         )
 
         RadioButtonSelection(
             label = "Select Language", // todo move to res
             options = LanguageSelection.entries,
-            selectedOption = selectedLanguage,
+            selectedOption = uiState.currentLanguage,
             onOptionSelected = { newSelectedLanguage ->
-                selectedLanguage = newSelectedLanguage as LanguageSelection
-                onLanguageSelected.invoke(newSelectedLanguage)
+                onLanguageSelected.invoke(newSelectedLanguage as LanguageSelection)
             }
         )
     }
 }
 
-@SuppressLint("RememberReturnType")
 @Composable
 fun RadioButtonSelection(
     modifier: Modifier = Modifier,
@@ -141,7 +130,11 @@ fun RadioButtonSelection(
 @Composable
 private fun SettingsScreenPreview() {
     SettingsScreen(
-        uiState = SettingsViewModelState(),
+        uiState = SettingsUiState.SettingsLoaded(
+            currentApi = ApiSelection.UNSPLASH,
+            currentTheme = ThemeSelection.SYSTEM,
+            currentLanguage = LanguageSelection.RU
+        ),
         onApiSelected = {},
         onThemeSelected = {},
         onLanguageSelected = {},

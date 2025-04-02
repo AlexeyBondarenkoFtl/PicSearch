@@ -7,7 +7,7 @@ import com.alexeybondarenko.domain.repository.SettingsService
 class GetThemeSettingUseCase(
     private val settingsService: SettingsService,
 ) {
-    private val defValue = ThemeSettingEntity.SYSTEM
+    private val defValue = SettingsService.themeDefault
 
     fun execute(): ThemeSettingEntity {
         val setting = settingsService.getSetting(

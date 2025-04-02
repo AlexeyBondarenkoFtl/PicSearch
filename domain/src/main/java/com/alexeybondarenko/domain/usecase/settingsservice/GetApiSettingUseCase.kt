@@ -7,7 +7,7 @@ import com.alexeybondarenko.domain.repository.SettingsService
 class GetApiSettingUseCase(
     private val settingsService: SettingsService,
 ) {
-    private val defValue = ApiSettingEntity.UNSPLASH
+    private val defValue = SettingsService.apiDefault
 
     fun execute(): ApiSettingEntity {
         val setting = settingsService.getSetting(
