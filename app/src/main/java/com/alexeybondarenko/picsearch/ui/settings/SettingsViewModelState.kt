@@ -4,16 +4,21 @@ import com.alexeybondarenko.domain.repository.SettingsService
 import com.alexeybondarenko.picsearch.ui.settings.utils.ApiSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.LanguageSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.ThemeSelectionMapper
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
 
 data class SettingsViewModelState(
     val currentApi: ApiSelection = api,
     val currentTheme: ThemeSelection = theme,
     val currentLanguage: LanguageSelection = language,
+    val isDeleteAllImagesPossible: Boolean = false,
+    val operationErrorMessage: PicSearchErrorWithAction? = null,
 ) {
     fun toUiState(): SettingsUiState = SettingsUiState.SettingsLoaded(
         currentApi = currentApi,
         currentTheme = currentTheme,
         currentLanguage = currentLanguage,
+        isDeleteAllImagesPossible = isDeleteAllImagesPossible,
+        operationErrorMessage = operationErrorMessage,
     )
 
     companion object DefaultSettings {
@@ -33,6 +38,8 @@ sealed interface SettingsUiState {
         val currentApi: ApiSelection,
         val currentTheme: ThemeSelection,
         val currentLanguage: LanguageSelection,
+        val isDeleteAllImagesPossible: Boolean,
+        val operationErrorMessage: PicSearchErrorWithAction?,
     ) : SettingsUiState
 }
 

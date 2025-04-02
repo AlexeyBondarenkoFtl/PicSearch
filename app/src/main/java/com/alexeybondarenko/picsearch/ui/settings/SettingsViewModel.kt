@@ -2,6 +2,8 @@ package com.alexeybondarenko.picsearch.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexeybondarenko.domain.usecase.imagestorageservice.CheckIsImageStorageEmptyUseCase
+import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteAllImagesInStorageUseCase
 import com.alexeybondarenko.domain.usecase.settingsservice.GetApiSettingUseCase
 import com.alexeybondarenko.domain.usecase.settingsservice.GetLanguageSettingUseCase
 import com.alexeybondarenko.domain.usecase.settingsservice.GetThemeSettingUseCase
@@ -11,11 +13,13 @@ import com.alexeybondarenko.domain.usecase.settingsservice.SetThemeSettingUseCas
 import com.alexeybondarenko.picsearch.ui.settings.utils.ApiSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.LanguageSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.ThemeSelectionMapper
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val setApiSettingUseCase: SetApiSettingUseCase,
@@ -24,6 +28,8 @@ class SettingsViewModel(
     private val setThemeSettingUseCase: SetThemeSettingUseCase,
     private val getLanguageSettingUseCase: GetLanguageSettingUseCase,
     private val setLanguageSettingUseCase: SetLanguageSettingUseCase,
+    private val checkIsImageStorageEmptyUseCase: CheckIsImageStorageEmptyUseCase,
+    private val deleteAllImagesInStorageUseCase: DeleteAllImagesInStorageUseCase,
 ) : ViewModel() {
     private val viewModelState = MutableStateFlow(SettingsViewModelState())
 
@@ -64,13 +70,51 @@ class SettingsViewModel(
         viewModelState.update { it.copy(currentLanguage = newLanguage) }
     }
 
+    fun deleteAllImagesInStorage() {
+        viewModelScope.launch {
+            try {
+                deleteAllImagesInStorageUseCase.execute()
+
+                viewModelState.update {
+                    it.copy(
+                        isDeleteAllImagesPossible = !checkIsImageStorageEmptyUseCase.execute()
+                    )
+                }
+            } catch (e: Exception) {
+                handleException(e)
+            }
+        }
+    }
+
     private fun setSavedSettingValues() {
+        viewModelScope.launch {
+            try {
+                viewModelState.update {
+                    it.copy(
+                        currentApi = apiMapper.mapFromEntity(getApiSettingUseCase.execute()),
+                        currentTheme = themeMapper.mapFromEntity(getThemeSettingUseCase.execute()),
+                        currentLanguage = languageMapper.mapFromEntity(getLanguageSettingUseCase.execute()),
+                        isDeleteAllImagesPossible = !checkIsImageStorageEmptyUseCase.execute()
+                    )
+                }
+            } catch (e: Exception) {
+                handleException(e)
+            }
+        }
+    }
+
+    private fun handleException(e: Exception) {
+        e.printStackTrace()
+
+        val error = PicSearchErrorWithAction(
+            message = e.message,
+            confirmAction = {
+                viewModelState.update {
+                    it.copy(operationErrorMessage = null)
+                }
+            })
         viewModelState.update {
-            it.copy(
-                currentApi = apiMapper.mapFromEntity(getApiSettingUseCase.execute()),
-                currentTheme = themeMapper.mapFromEntity(getThemeSettingUseCase.execute()),
-                currentLanguage = languageMapper.mapFromEntity(getLanguageSettingUseCase.execute()),
-            )
+            it.copy(operationErrorMessage = error)
         }
     }
 
