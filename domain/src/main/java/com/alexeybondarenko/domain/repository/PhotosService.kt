@@ -4,7 +4,7 @@ import com.alexeybondarenko.domain.model.ImageEntity
 
 
 interface PhotosService {
-    suspend fun getPhotosByQuery(query: String): List<ImageEntity>?
+    suspend fun getPhotosByQuery(query: String, page: Int): List<ImageEntity>?
 
     suspend fun getPhotoById(id: String): ImageEntity?
 }

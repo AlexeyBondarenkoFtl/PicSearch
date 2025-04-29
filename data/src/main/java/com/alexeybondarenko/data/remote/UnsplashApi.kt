@@ -11,7 +11,7 @@ interface UnsplashApi {
     @GET("/search/photos")
     suspend fun getPhotosByQuery(
         @Query("query") query: String,
-//        @Query("page") page: String? = null,
+        @Query("page") page: Int?,
     ): UnsplashSearchResultsResponse
 
     @GET("/photos/{id}")

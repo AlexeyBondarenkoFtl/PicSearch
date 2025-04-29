@@ -9,10 +9,10 @@ import com.alexeybondarenko.domain.repository.PhotosService
 class PhotosServiceUnsplashImpl(
     private val unsplashApi: UnsplashApi,
 ) : PhotosService {
-    override suspend fun getPhotosByQuery(query: String): List<ImageEntity>? {
+    override suspend fun getPhotosByQuery(query: String, page: Int): List<ImageEntity>? {
         val mapper = UnsplashSearchResultsResponse.EntityMapper()
 
-        val result = unsplashApi.getPhotosByQuery(query)
+        val result = unsplashApi.getPhotosByQuery(query, page)
         val unsplashSearchResultEntity = mapper.mapToEntity(result)
 
         return unsplashSearchResultEntity.results?.map { it }

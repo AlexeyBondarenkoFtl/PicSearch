@@ -54,7 +54,8 @@ fun ImageSearchRoute(
         uiState = uiState,
         searchHistory = searchHistoryUiState,
         onSearchClick = viewModel::searchByQuery,
-        onImageClick = viewModel::saveImage
+        onImageClick = viewModel::saveImage,
+        onRequestNextItems = viewModel::loadNextImages
     )
 
 }
@@ -65,7 +66,10 @@ fun ImageSearchScreen(
     searchHistory: List<SearchHistoryItem>,
     onSearchClick: (query: String) -> Unit,
     onImageClick: (id: String) -> Unit,
+    onRequestNextItems: (query: String) -> Unit,
 ) {
+    var query by remember { mutableStateOf("") }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,7 +77,9 @@ fun ImageSearchScreen(
     ) {
         PicSearchSearchBar(
             searchHistory = searchHistory,
-            onSearchClick = onSearchClick,
+            query = query,
+            onSearchClick = { onSearchClick.invoke(query) },
+            onQueryChange = { query = it }
         )
 
         when (uiState) {
@@ -81,6 +87,7 @@ fun ImageSearchScreen(
                 SearchResult(
                     loadedState = uiState,
                     onImageClick = onImageClick,
+                    onLastItemReached = { onRequestNextItems.invoke(query) }
                 )
             }
 
@@ -101,11 +108,13 @@ fun ImageSearchScreen(
 @Composable
 fun BoxScope.PicSearchSearchBar(
     modifier: Modifier = Modifier,
+    query: String,
     searchHistory: List<SearchHistoryItem>,
-    onSearchClick: (query: String) -> Unit,
+    onSearchClick: () -> Unit,
+    onQueryChange: (query: String) -> Unit,
 ) {
     val textFieldState = rememberTextFieldState()
-    var query by remember { mutableStateOf("") }
+
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     SearchBar(
@@ -115,9 +124,9 @@ fun BoxScope.PicSearchSearchBar(
         inputField = {
             SearchBarDefaults.InputField(
                 query = query,
-                onQueryChange = { query = it },
-                onSearch = { query ->
-                    onSearchClick.invoke(query)
+                onQueryChange = onQueryChange,
+                onSearch = {
+                    onSearchClick.invoke()
                     expanded = false
                 },
                 expanded = expanded,
@@ -156,6 +165,7 @@ fun SearchResult(
     modifier: Modifier = Modifier,
     loadedState: ImageSearchUiState.ImageSearchLoaded,
     onImageClick: (id: String) -> Unit,
+    onLastItemReached: () -> Unit,
 ) {
     Box(
         modifier = modifier.fillMaxSize()
@@ -179,6 +189,7 @@ fun SearchResult(
                 SearchResultsList(
                     searchResult = loadedState.searchResults,
                     onClick = onImageClick,
+                    onLastItemReached = onLastItemReached,
                 )
             }
         }
@@ -194,13 +205,13 @@ private fun SearchResultsList(
     modifier: Modifier = Modifier,
     searchResult: List<ImageCard>?,
     onClick: (id: String) -> Unit,
+    onLastItemReached: () -> Unit,
 ) {
     if (searchResult != null) {
         PicSearchImageList(
             images = searchResult,
             onClick = onClick,
-            // todo не забыть
-            onLastItemReached = {},
+            onLastItemReached = onLastItemReached,
         )
     }
 }
@@ -217,5 +228,6 @@ private fun ImageSearchScreenPreview() {
         searchHistory = emptyList(),
         onSearchClick = {},
         onImageClick = {},
+        onRequestNextItems = {}
     )
 }

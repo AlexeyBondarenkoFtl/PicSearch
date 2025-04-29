@@ -48,6 +48,7 @@ class ImageSearchViewModel(
             initialValue = emptyList()
         )
 
+    private var lastPage = 1
 
     init {
         updateSearchHistory()
@@ -99,21 +100,34 @@ class ImageSearchViewModel(
         }
     }
 
+    fun loadNextImages(
+        query: String,
+    ) {
+        lastPage++
+        searchByQuery(query)
+    }
+
+    fun resetLastPage() {
+        lastPage = 1
+    }
+
     private suspend fun searchByQueryInternal(
         query: String,
     ): List<ImageCard>? {
-        val photos: List<ImageEntity>? = getPhotosByQueryUseCase.execute(query)
+        val photos: List<ImageEntity>? = getPhotosByQueryUseCase.execute(query, lastPage)
 
-        return photos?.map { imageEntity ->
-            ImageCard(
-                id = imageEntity.id,
-                url = imageEntity.urls?.regular,
-                aspectRatio = calculateAspectRatio(
-                    width = imageEntity.width,
-                    height = imageEntity.height,
-                )
+        return photos?.map { mapImageEntityToImageCard(it) }
+    }
+
+    private fun mapImageEntityToImageCard(from: ImageEntity): ImageCard {
+        return ImageCard(
+            id = from.id,
+            url = from.urls?.regular,
+            aspectRatio = calculateAspectRatio(
+                width = from.width,
+                height = from.height,
             )
-        }
+        )
     }
 
     private fun updateSearchHistory() {
