@@ -1,8 +1,8 @@
 package com.alexeybondarenko.picsearch.ui.settings.utils
 
-import com.alexeybondarenko.domain.model.ApiSettingEntity
-import com.alexeybondarenko.domain.model.LanguageSettingEntity
-import com.alexeybondarenko.domain.model.ThemeSettingEntity
+import com.alexeybondarenko.domain.models.ApiSettingEntity
+import com.alexeybondarenko.domain.models.LanguageSettingEntity
+import com.alexeybondarenko.domain.models.ThemeSettingEntity
 import com.alexeybondarenko.domain.utils.Mapper
 import com.alexeybondarenko.picsearch.ui.settings.ApiSelection
 import com.alexeybondarenko.picsearch.ui.settings.LanguageSelection

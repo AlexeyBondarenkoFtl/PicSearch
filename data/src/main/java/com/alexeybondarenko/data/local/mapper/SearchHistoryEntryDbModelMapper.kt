@@ -1,7 +1,7 @@
 package com.alexeybondarenko.data.local.mapper
 
 import com.alexeybondarenko.data.local.model.SearchHistoryEntryDbModel
-import com.alexeybondarenko.domain.model.SearchHistoryEntryEntity
+import com.alexeybondarenko.domain.models.SearchHistoryEntryEntity
 import com.alexeybondarenko.domain.utils.Mapper
 
 class SearchHistoryEntryDbModelMapper :

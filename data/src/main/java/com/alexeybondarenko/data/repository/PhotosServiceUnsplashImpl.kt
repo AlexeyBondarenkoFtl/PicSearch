@@ -3,8 +3,8 @@ package com.alexeybondarenko.data.repository
 import com.alexeybondarenko.data.remote.UnsplashApi
 import com.alexeybondarenko.data.remote.response.UnsplashResultImageResponse
 import com.alexeybondarenko.data.remote.response.UnsplashSearchResultsResponse
-import com.alexeybondarenko.domain.model.ImageEntity
-import com.alexeybondarenko.domain.repository.PhotosService
+import com.alexeybondarenko.domain.models.ImageEntity
+import com.alexeybondarenko.domain.service.photo.repository.PhotosService
 
 class PhotosServiceUnsplashImpl(
     private val unsplashApi: UnsplashApi,

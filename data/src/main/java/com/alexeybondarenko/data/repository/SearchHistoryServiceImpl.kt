@@ -2,8 +2,8 @@ package com.alexeybondarenko.data.repository
 
 import com.alexeybondarenko.data.local.dao.SearchHistoryDao
 import com.alexeybondarenko.data.local.mapper.SearchHistoryEntryDbModelMapper
-import com.alexeybondarenko.domain.model.SearchHistoryEntryEntity
-import com.alexeybondarenko.domain.repository.SearchHistoryService
+import com.alexeybondarenko.domain.models.SearchHistoryEntryEntity
+import com.alexeybondarenko.domain.service.searchhistory.repository.SearchHistoryService
 
 class SearchHistoryServiceImpl(
     private val searchHistoryDao: SearchHistoryDao,

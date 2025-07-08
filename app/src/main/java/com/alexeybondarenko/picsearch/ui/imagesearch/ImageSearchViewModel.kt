@@ -1,13 +1,13 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
 import androidx.lifecycle.viewModelScope
-import com.alexeybondarenko.domain.model.ImageEntity
-import com.alexeybondarenko.domain.model.SearchHistoryEntryEntity
-import com.alexeybondarenko.domain.usecase.imagestorageservice.SaveImageToStorageUseCase
-import com.alexeybondarenko.domain.usecase.photoservice.GetPhotoByIdUseCase
-import com.alexeybondarenko.domain.usecase.photoservice.GetPhotosByQueryUseCase
-import com.alexeybondarenko.domain.usecase.searchhistoryservice.GetAllSearchHistoryEntriesUseCase
-import com.alexeybondarenko.domain.usecase.searchhistoryservice.SaveQueryToSearchHistoryUseCase
+import com.alexeybondarenko.domain.models.ImageEntity
+import com.alexeybondarenko.domain.models.SearchHistoryEntryEntity
+import com.alexeybondarenko.domain.service.imagestorage.usecase.SaveImageToStorageUseCase
+import com.alexeybondarenko.domain.service.photo.usecase.GetPhotoByIdUseCase
+import com.alexeybondarenko.domain.service.photo.usecase.GetPhotosByQueryUseCase
+import com.alexeybondarenko.domain.service.searchhistory.usecase.GetAllSearchHistoryEntriesUseCase
+import com.alexeybondarenko.domain.service.searchhistory.usecase.SaveQueryToSearchHistoryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.SearchHistoryItem
 import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio

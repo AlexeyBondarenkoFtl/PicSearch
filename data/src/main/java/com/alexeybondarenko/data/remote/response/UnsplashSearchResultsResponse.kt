@@ -1,12 +1,12 @@
 package com.alexeybondarenko.data.remote.response
 
-import com.alexeybondarenko.domain.model.UnsplashProfileImageEntity
-import com.alexeybondarenko.domain.model.UnsplashResultImageEntity
-import com.alexeybondarenko.domain.model.UnsplashResultImageLinksEntity
-import com.alexeybondarenko.domain.model.UnsplashResultImageUrlsEntity
-import com.alexeybondarenko.domain.model.UnsplashSearchResultsEntity
-import com.alexeybondarenko.domain.model.UnsplashUserEntity
-import com.alexeybondarenko.domain.model.UnsplashUserLinksEntity
+import com.alexeybondarenko.domain.models.UnsplashProfileImageEntity
+import com.alexeybondarenko.domain.models.UnsplashResultImageEntity
+import com.alexeybondarenko.domain.models.UnsplashResultImageLinksEntity
+import com.alexeybondarenko.domain.models.UnsplashResultImageUrlsEntity
+import com.alexeybondarenko.domain.models.UnsplashSearchResultsEntity
+import com.alexeybondarenko.domain.models.UnsplashUserEntity
+import com.alexeybondarenko.domain.models.UnsplashUserLinksEntity
 
 data class UnsplashSearchResultsResponse(
     val total: Int?,

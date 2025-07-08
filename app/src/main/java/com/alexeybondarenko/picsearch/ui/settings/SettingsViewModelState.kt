@@ -1,6 +1,6 @@
 package com.alexeybondarenko.picsearch.ui.settings
 
-import com.alexeybondarenko.domain.repository.SettingsService
+import com.alexeybondarenko.domain.service.settings.repository.SettingsService
 import com.alexeybondarenko.picsearch.ui.settings.utils.ApiSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.LanguageSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.ThemeSelectionMapper

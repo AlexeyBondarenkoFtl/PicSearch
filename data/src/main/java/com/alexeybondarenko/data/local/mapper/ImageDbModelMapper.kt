@@ -1,10 +1,10 @@
 package com.alexeybondarenko.data.local.mapper
 
 import com.alexeybondarenko.data.local.model.ImageDbModel
-import com.alexeybondarenko.domain.model.ImageEntity
-import com.alexeybondarenko.domain.model.ImageUrlsEntity
-import com.alexeybondarenko.domain.model.ProfileImageEntity
-import com.alexeybondarenko.domain.model.UserEntity
+import com.alexeybondarenko.domain.models.ImageEntity
+import com.alexeybondarenko.domain.models.ImageUrlsEntity
+import com.alexeybondarenko.domain.models.ProfileImageEntity
+import com.alexeybondarenko.domain.models.UserEntity
 import com.alexeybondarenko.domain.utils.Mapper
 import java.util.Date
 import java.util.UUID

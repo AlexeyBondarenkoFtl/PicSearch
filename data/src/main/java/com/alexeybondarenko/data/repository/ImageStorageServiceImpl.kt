@@ -2,8 +2,8 @@ package com.alexeybondarenko.data.repository
 
 import com.alexeybondarenko.data.local.dao.ImageDao
 import com.alexeybondarenko.data.local.mapper.ImageDbModelMapper
-import com.alexeybondarenko.domain.model.ImageEntity
-import com.alexeybondarenko.domain.repository.ImageStorageService
+import com.alexeybondarenko.domain.models.ImageEntity
+import com.alexeybondarenko.domain.service.imagestorage.repository.ImageStorageService
 
 class ImageStorageServiceImpl(
     private val imageDao: ImageDao,

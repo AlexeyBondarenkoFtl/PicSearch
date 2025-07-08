@@ -2,14 +2,14 @@ package com.alexeybondarenko.picsearch.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alexeybondarenko.domain.usecase.imagestorageservice.CheckIsImageStorageEmptyUseCase
-import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteAllImagesInStorageUseCase
-import com.alexeybondarenko.domain.usecase.settingsservice.GetApiSettingUseCase
-import com.alexeybondarenko.domain.usecase.settingsservice.GetLanguageSettingUseCase
-import com.alexeybondarenko.domain.usecase.settingsservice.GetThemeSettingUseCase
-import com.alexeybondarenko.domain.usecase.settingsservice.SetApiSettingUseCase
-import com.alexeybondarenko.domain.usecase.settingsservice.SetLanguageSettingUseCase
-import com.alexeybondarenko.domain.usecase.settingsservice.SetThemeSettingUseCase
+import com.alexeybondarenko.domain.service.imagestorage.usecase.CheckIsImageStorageEmptyUseCase
+import com.alexeybondarenko.domain.service.imagestorage.usecase.DeleteAllImagesInStorageUseCase
+import com.alexeybondarenko.domain.service.settings.usecase.GetApiSettingUseCase
+import com.alexeybondarenko.domain.service.settings.usecase.GetLanguageSettingUseCase
+import com.alexeybondarenko.domain.service.settings.usecase.GetThemeSettingUseCase
+import com.alexeybondarenko.domain.service.settings.usecase.SetApiSettingUseCase
+import com.alexeybondarenko.domain.service.settings.usecase.SetLanguageSettingUseCase
+import com.alexeybondarenko.domain.service.settings.usecase.SetThemeSettingUseCase
 import com.alexeybondarenko.picsearch.ui.settings.utils.ApiSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.LanguageSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.ThemeSelectionMapper

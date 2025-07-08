@@ -1,8 +1,8 @@
 package com.alexeybondarenko.picsearch.ui.savedimages
 
 import androidx.lifecycle.viewModelScope
-import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteImageByIdFromStorageUseCase
-import com.alexeybondarenko.domain.usecase.imagestorageservice.GetAllImagesFromStorageUseCase
+import com.alexeybondarenko.domain.service.imagestorage.usecase.DeleteImageByIdFromStorageUseCase
+import com.alexeybondarenko.domain.service.imagestorage.usecase.GetAllImagesFromStorageUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
 import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchViewModel

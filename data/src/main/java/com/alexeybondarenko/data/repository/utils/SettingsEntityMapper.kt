@@ -1,9 +1,9 @@
 package com.alexeybondarenko.data.repository.utils
 
-import com.alexeybondarenko.domain.model.ApiSettingEntity
-import com.alexeybondarenko.domain.model.LanguageSettingEntity
-import com.alexeybondarenko.domain.model.SettingEntity
-import com.alexeybondarenko.domain.model.ThemeSettingEntity
+import com.alexeybondarenko.domain.models.ApiSettingEntity
+import com.alexeybondarenko.domain.models.LanguageSettingEntity
+import com.alexeybondarenko.domain.models.SettingEntity
+import com.alexeybondarenko.domain.models.ThemeSettingEntity
 import com.alexeybondarenko.domain.utils.Mapper
 
 class SettingsEntityMapper : Mapper<String, SettingEntity>() {

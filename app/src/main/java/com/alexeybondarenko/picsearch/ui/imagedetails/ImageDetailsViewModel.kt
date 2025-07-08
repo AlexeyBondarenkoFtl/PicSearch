@@ -3,9 +3,9 @@
 //import androidx.lifecycle.ViewModel
 //import androidx.lifecycle.viewModelScope
 //import com.alexeybondarenko.domain.model.ImageEntity
-//import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteImageByIdFromStorageUseCase
-//import com.alexeybondarenko.domain.usecase.imagestorageservice.SaveImageToStorageUseCase
-//import com.alexeybondarenko.domain.usecase.photoservice.GetPhotoByIdUseCase
+//import com.alexeybondarenko.domain.services.imagestorage.usecases.DeleteImageByIdFromStorageUseCase
+//import com.alexeybondarenko.domain.services.imagestorage.usecases.SaveImageToStorageUseCase
+//import com.alexeybondarenko.domain.service.photo.usecases.GetPhotoByIdUseCase
 //import com.alexeybondarenko.picsearch.ui.imagedetails.data.ImageDetailedCard
 //import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
 //import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchSimpleError

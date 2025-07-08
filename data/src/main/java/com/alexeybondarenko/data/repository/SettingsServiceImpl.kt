@@ -3,9 +3,9 @@ package com.alexeybondarenko.data.repository
 import android.content.Context
 import androidx.core.content.edit
 import com.alexeybondarenko.data.repository.utils.SettingsEntityMapper
-import com.alexeybondarenko.domain.model.SettingEntity
-import com.alexeybondarenko.domain.model.SettingKeyEntity
-import com.alexeybondarenko.domain.repository.SettingsService
+import com.alexeybondarenko.domain.models.SettingEntity
+import com.alexeybondarenko.domain.models.SettingKeyEntity
+import com.alexeybondarenko.domain.service.settings.repository.SettingsService
 
 class SettingsServiceImpl(
     context: Context,
