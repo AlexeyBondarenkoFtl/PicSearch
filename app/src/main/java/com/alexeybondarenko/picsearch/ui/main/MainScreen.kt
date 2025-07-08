@@ -1,5 +1,6 @@
 package com.alexeybondarenko.picsearch.ui.main
 
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -53,25 +54,41 @@ private fun BottomNavBar(
             val isSelected =
                 currentDestination?.route == navItems[selectedItemIndex].associatedRoute.getSimpleName()
 
-            NavigationBarItem(
-                icon = {
-                    Icon(
-                        if (index == selectedItemIndex) item.selectIcon else item.unselectIcon,
-                        contentDescription = item.label
-                    )
-                },
-                label = { Text(item.label) },
+            NavBarItem(
+                item = item,
                 selected = isSelected,
                 onClick = {
-                    if (selectedItemIndex == index) return@NavigationBarItem
-                    selectedItemIndex = index
-
-                    navController.navigate(item.associatedRoute)
-                }
+                    if (selectedItemIndex != index) {
+                        selectedItemIndex = index
+                        navController.navigate(item.associatedRoute)
+                    }
+                },
+                isThisIndexSelected = index == selectedItemIndex
             )
         }
     }
 }
+
+@Composable
+private fun RowScope.NavBarItem(
+    item: NavigationItem,
+    selected: Boolean,
+    onClick: () -> Unit,
+    isThisIndexSelected: Boolean,
+) {
+    NavigationBarItem(
+        icon = {
+            Icon(
+                if (isThisIndexSelected) item.selectIcon else item.unselectIcon,
+                contentDescription = item.label
+            )
+        },
+        label = { Text(item.label) },
+        selected = selected,
+        onClick = onClick,
+    )
+}
+
 
 @Composable
 @Preview
