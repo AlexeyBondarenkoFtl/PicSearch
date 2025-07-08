@@ -30,6 +30,7 @@ fun PicSearchImageList(
     images: List<ImageCard>,
     onClick: (id: String) -> Unit,
     onLastItemReached: () -> Unit = {},
+    isSearchBarPaddingNeeded: Boolean = false,
 ) {
     val state = rememberLazyStaggeredGridState()
     val isLastReached by remember {
@@ -45,7 +46,7 @@ fun PicSearchImageList(
         columns = StaggeredGridCells.Fixed(2),
         modifier = modifier.fillMaxSize(),
         state = state,
-        contentPadding = PaddingValues(8.dp),
+        contentPadding = calculateContentPadding(isSearchBarPaddingNeeded),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalItemSpacing = 8.dp
     ) {
@@ -82,6 +83,21 @@ private fun ImageCard(
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds
         )
+    }
+}
+
+private fun calculateContentPadding(
+    isSearchBarPaddingNeeded: Boolean
+): PaddingValues {
+    return if (isSearchBarPaddingNeeded) {
+        PaddingValues(
+            top = (88 + 8).dp,
+            bottom = 8.dp,
+            start = 8.dp,
+            end = 8.dp,
+        )
+    } else {
+        PaddingValues(8.dp)
     }
 }
 

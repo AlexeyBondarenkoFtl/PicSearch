@@ -211,6 +211,7 @@ private fun SearchResult(
                     images = loadedState.searchResults,
                     onClick = onImageClick,
                     onLastItemReached = onLastItemReached,
+                    isSearchBarPaddingNeeded = true,
                 )
             }
         }
