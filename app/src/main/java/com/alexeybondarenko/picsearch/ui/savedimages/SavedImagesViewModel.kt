@@ -1,32 +1,21 @@
 package com.alexeybondarenko.picsearch.ui.savedimages
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexeybondarenko.domain.usecase.imagestorageservice.DeleteImageByIdFromStorageUseCase
 import com.alexeybondarenko.domain.usecase.imagestorageservice.GetAllImagesFromStorageUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
-import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SavedImagesViewModel(
     private val getAllImagesFromStorageUseCase: GetAllImagesFromStorageUseCase,
     private val deleteImageByIdFromStorageUseCase: DeleteImageByIdFromStorageUseCase,
-) : ViewModel() {
-    private val viewModelState = MutableStateFlow(SavedImagesViewModelState())
-
-    val uiState = viewModelState
-        .map(SavedImagesViewModelState::toUiState)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = viewModelState.value.toUiState()
-        )
+) : PicSearchViewModel<SavedImagesViewModelState, SavedImagesUiState>(
+    initialState = SavedImagesViewModelState()
+) {
+    override val tag: String = "SavedImagesViewModel"
 
     private val limit = 20
     private var isLoading = false
@@ -58,19 +47,7 @@ class SavedImagesViewModel(
                 viewModelState.update { it.copy(savedImages = imageCards) }
 
             } catch (e: Exception) {
-                e.printStackTrace()
-
-                val error = PicSearchErrorWithAction(
-                    message = e.message,
-                    confirmAction = {
-                        viewModelState.update {
-                            it.copy(operationErrorMessage = null)
-                        }
-                    }
-                )
-                viewModelState.update {
-                    it.copy(operationErrorMessage = error)
-                }
+                handleError(e)
             } finally {
                 viewModelState.update { it.copy(isLoading = false) }
             }
@@ -97,19 +74,7 @@ class SavedImagesViewModel(
                 viewModelState.update { it.copy(savedImages = imageCards) }
 
             } catch (e: Exception) {
-                e.printStackTrace()
-
-                val error = PicSearchErrorWithAction(
-                    message = e.message,
-                    confirmAction = {
-                        viewModelState.update {
-                            it.copy(operationErrorMessage = null)
-                        }
-                    }
-                )
-                viewModelState.update {
-                    it.copy(operationErrorMessage = error)
-                }
+                handleError(e)
             }
         }
     }
@@ -145,8 +110,4 @@ class SavedImagesViewModel(
 //
 //        }
 //    }
-
-    companion object {
-        private const val TAG = "SavedImagesViewModel"
-    }
 }

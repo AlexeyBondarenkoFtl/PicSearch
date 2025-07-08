@@ -26,23 +26,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchAlertDialog
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorDialog
 import org.koin.androidx.compose.koinViewModel
 
-@Composable
-fun SettingsRoute(
-    viewModel: SettingsViewModel = koinViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    SettingsScreen(
-        uiState = uiState,
-        onApiSelected = viewModel::selectApi,
-        onThemeSelected = viewModel::selectTheme,
-        onLanguageSelected = viewModel::selectLanguage,
-        onDeleteAllImagesClick = viewModel::deleteAllImagesInStorage,
-    )
-}
 
 @Composable
 fun SettingsScreen(
@@ -108,7 +95,7 @@ fun SettingsScreen(
         }
 
         uiState.operationErrorMessage?.let { error ->
-            PicSearchAlertDialog(error = error)
+            PicSearchErrorDialog(error = error)
         }
     }
 }

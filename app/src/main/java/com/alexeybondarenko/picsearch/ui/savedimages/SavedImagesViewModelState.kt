@@ -1,37 +1,39 @@
 package com.alexeybondarenko.picsearch.ui.savedimages
 
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
-import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
+import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchError
+import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchViewModelState
 
 data class SavedImagesViewModelState(
-    val errorMessage: PicSearchErrorWithAction? = null,
-    val isLoading: Boolean = false,
+    override val error: PicSearchError? = null,
+    override val isLoading: Boolean = false,
     val savedImages: List<ImageCard>? = null,
-    val operationErrorMessage: PicSearchErrorWithAction? = null,
-) {
-    fun toUiState(): SavedImagesUiState = when {
-        isLoading -> SavedImagesUiState.SavedImagesLoading
-
-        !isLoading && errorMessage != null -> SavedImagesUiState.SavedImagesLoadingError(
-            errorMessage = errorMessage
+) : PicSearchViewModelState<SavedImagesUiState> {
+    override fun toUiState(): SavedImagesUiState = when {
+        isLoading -> SavedImagesUiState.SavedImagesLoading(
+            error = error,
         )
 
         else -> SavedImagesUiState.SavedImagesLoaded(
             savedImages = savedImages,
-            operationErrorMessage = operationErrorMessage,
+            error = error,
         )
+    }
+
+    override fun withError(error: PicSearchError): PicSearchViewModelState<SavedImagesUiState> {
+        return this.copy(error = error)
     }
 }
 
 sealed interface SavedImagesUiState {
-    data object SavedImagesLoading : SavedImagesUiState
+    val error: PicSearchError?
+
+    data class SavedImagesLoading(
+        override val error: PicSearchError?,
+    ) : SavedImagesUiState
 
     data class SavedImagesLoaded(
         val savedImages: List<ImageCard>?,
-        val operationErrorMessage: PicSearchErrorWithAction?,
-    ) : SavedImagesUiState
-
-    data class SavedImagesLoadingError(
-        val errorMessage: PicSearchErrorWithAction?,
+        override val error: PicSearchError?,
     ) : SavedImagesUiState
 }

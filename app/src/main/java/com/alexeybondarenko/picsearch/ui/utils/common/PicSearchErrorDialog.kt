@@ -9,15 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchError
 
 @Composable
-fun PicSearchAlertDialog(
+fun PicSearchErrorDialog(
     modifier: Modifier = Modifier,
-    error: PicSearchErrorWithAction,
+    error: PicSearchError,
+    onDismiss: () -> Unit = {},
+    onConfirm: () -> Unit = {},
 ) {
     AlertDialog(
-        onDismissRequest = error.confirmAction,
-        modifier = Modifier
+        onDismissRequest = onDismiss,
+        modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         title = {
@@ -28,7 +31,7 @@ fun PicSearchAlertDialog(
         },
         confirmButton = {
             Button(
-                onClick = error.confirmAction
+                onClick = onConfirm
             ) {
                 Text("OK")
             }

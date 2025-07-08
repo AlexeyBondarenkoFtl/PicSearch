@@ -36,29 +36,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.SearchHistoryItem
-import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchAlertDialog
+import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorDialog
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchImageList
-import org.koin.androidx.compose.koinViewModel
 
-@Composable
-fun ImageSearchRoute(
-    viewModel: ImageSearchViewModel = koinViewModel()
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val searchHistoryUiState by viewModel.searchHistoryUiState.collectAsStateWithLifecycle()
-
-    ImageSearchScreen(
-        uiState = uiState,
-        searchHistory = searchHistoryUiState,
-        onSearchClick = viewModel::searchByQuery,
-        onImageClick = viewModel::saveImage,
-        onRequestNextItems = viewModel::loadNextImages
-    )
-
-}
 
 @Composable
 fun ImageSearchScreen(
@@ -91,22 +72,21 @@ fun ImageSearchScreen(
                 )
             }
 
-            ImageSearchUiState.ImageSearchLoading -> {
+            is ImageSearchUiState.ImageSearchLoading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
 
-            is ImageSearchUiState.ImageSearchLoadingError -> {
-                uiState.errorMessage?.let { error ->
-                    PicSearchAlertDialog(error = error)
-                }
-            }
+        }
+
+        uiState.error?.let {
+            PicSearchErrorDialog(error = it)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BoxScope.PicSearchSearchBar(
+private fun BoxScope.PicSearchSearchBar(
     modifier: Modifier = Modifier,
     query: String,
     searchHistory: List<SearchHistoryItem>,
@@ -122,46 +102,87 @@ fun BoxScope.PicSearchSearchBar(
             .align(Alignment.TopCenter)
             .semantics { traversalIndex = 0f },
         inputField = {
-            SearchBarDefaults.InputField(
+            SearchBarInputField(
                 query = query,
                 onQueryChange = onQueryChange,
                 onSearch = {
-                    onSearchClick.invoke()
                     expanded = false
+                    onSearchClick.invoke()
                 },
                 expanded = expanded,
-                onExpandedChange = { expanded = it },
-                placeholder = { Text("Hinted search text") },
-                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                onExpandedChange = { expanded = it }
             )
         },
         expanded = expanded,
         onExpandedChange = { expanded = it },
     ) {
-        // Suggestions
-        Column(Modifier.verticalScroll(rememberScrollState())) {
-            searchHistory.forEach { historyItem ->
-                ListItem(
-                    headlineContent = { Text(historyItem.entry) },
-                    supportingContent = { Text("Additional info") },
-                    leadingContent = { Icon(Icons.Filled.Star, contentDescription = null) },
-                    colors = ListItemDefaults.colors(containerColor = Color.Transparent),
-                    modifier =
-                        Modifier
-                            .clickable {
-                                textFieldState.setTextAndPlaceCursorAtEnd(historyItem.entry)
-                                expanded = false
-                            }
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 4.dp)
-                )
+        SearchBarSuggestionsList(
+            searchHistory = searchHistory,
+            onClick = { historyItem ->
+                textFieldState.setTextAndPlaceCursorAtEnd(historyItem.entry)
+                expanded = false
             }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SearchBarInputField(
+    query: String,
+    onQueryChange: (query: String) -> Unit,
+    onSearch: (String) -> Unit,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit
+) {
+    SearchBarDefaults.InputField(
+        query = query,
+        onQueryChange = onQueryChange,
+        onSearch = onSearch,
+        expanded = expanded,
+        onExpandedChange = onExpandedChange,
+        placeholder = { Text("Hinted search text") },
+        leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+    )
+}
+
+@Composable
+private fun SearchBarSuggestionsList(
+    searchHistory: List<SearchHistoryItem>,
+    onClick: (historyItem: SearchHistoryItem) -> Unit,
+) {
+    Column(Modifier.verticalScroll(rememberScrollState())) {
+        searchHistory.forEach {
+            SuggestionsListItem(
+                item = it,
+                onClick = onClick,
+            )
         }
     }
 }
 
 @Composable
-fun SearchResult(
+private fun SuggestionsListItem(
+    item: SearchHistoryItem,
+    onClick: (item: SearchHistoryItem) -> Unit,
+) {
+    ListItem(
+        headlineContent = { Text(item.entry) },
+        supportingContent = { Text("Additional info") },
+        leadingContent = { Icon(Icons.Filled.Star, contentDescription = null) },
+        colors = ListItemDefaults.colors(containerColor = Color.Transparent),
+        modifier =
+            Modifier
+                .clickable {
+                    onClick.invoke(item)
+                }
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 4.dp)
+    )
+}
+
+@Composable
+private fun SearchResult(
     modifier: Modifier = Modifier,
     loadedState: ImageSearchUiState.ImageSearchLoaded,
     onImageClick: (id: String) -> Unit,
@@ -186,36 +207,15 @@ fun SearchResult(
             }
 
             else -> {
-                SearchResultsList(
-                    searchResult = loadedState.searchResults,
+                PicSearchImageList(
+                    images = loadedState.searchResults,
                     onClick = onImageClick,
                     onLastItemReached = onLastItemReached,
                 )
             }
         }
-
-        loadedState.operationErrorMessage?.let { error ->
-            PicSearchAlertDialog(error = error)
-        }
     }
 }
-
-@Composable
-private fun SearchResultsList(
-    modifier: Modifier = Modifier,
-    searchResult: List<ImageCard>?,
-    onClick: (id: String) -> Unit,
-    onLastItemReached: () -> Unit,
-) {
-    if (searchResult != null) {
-        PicSearchImageList(
-            images = searchResult,
-            onClick = onClick,
-            onLastItemReached = onLastItemReached,
-        )
-    }
-}
-
 
 @Preview(showBackground = true)
 @Composable
@@ -223,7 +223,7 @@ private fun ImageSearchScreenPreview() {
     ImageSearchScreen(
         uiState = ImageSearchUiState.ImageSearchLoaded(
             searchResults = null,
-            operationErrorMessage = null
+            error = null,
         ),
         searchHistory = emptyList(),
         onSearchClick = {},

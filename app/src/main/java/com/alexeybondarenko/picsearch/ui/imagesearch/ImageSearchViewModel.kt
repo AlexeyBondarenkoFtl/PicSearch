@@ -1,6 +1,5 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alexeybondarenko.domain.model.ImageEntity
 import com.alexeybondarenko.domain.model.SearchHistoryEntryEntity
@@ -12,10 +11,9 @@ import com.alexeybondarenko.domain.usecase.searchhistoryservice.SaveQueryToSearc
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.SearchHistoryItem
 import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
-import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorWithAction
+import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -26,21 +24,15 @@ class ImageSearchViewModel(
     private val getPhotoByIdUseCase: GetPhotoByIdUseCase,
     private val getAllSearchHistoryEntriesUseCase: GetAllSearchHistoryEntriesUseCase,
     private val saveQueryToSearchHistoryUseCase: SaveQueryToSearchHistoryUseCase,
-) : ViewModel() {
-    private val viewModelState = MutableStateFlow(
-        ImageSearchViewModelState()
-    )
+) : PicSearchViewModel<ImageSearchViewModelState, ImageSearchUiState>(
+    initialState = ImageSearchViewModelState()
+) {
+    override val tag: String = "ImageSearchViewModel"
 
-    val uiState = viewModelState
-        .map(ImageSearchViewModelState::toUiState)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = viewModelState.value.toUiState()
-        )
-
+    // todo move to separate screen
     private val searchHistoryState = MutableStateFlow<List<SearchHistoryItem>>(emptyList())
 
+    // todo move to separate screen
     val searchHistoryUiState = searchHistoryState
         .stateIn(
             scope = viewModelScope,
@@ -76,7 +68,7 @@ class ImageSearchViewModel(
                 )
 
             } catch (e: Exception) {
-                handleException(e)
+                handleError(e)
             } finally {
                 viewModelState.update {
                     it.copy(isLoading = false)
@@ -95,7 +87,7 @@ class ImageSearchViewModel(
 
                 image?.let { saveImageToStorageUseCase.execute(it) }
             } catch (e: Exception) {
-                handleException(e)
+                handleError(e)
             }
         }
     }
@@ -130,6 +122,7 @@ class ImageSearchViewModel(
         )
     }
 
+    // todo move to separate screen
     private fun updateSearchHistory() {
         viewModelScope.launch {
             try {
@@ -140,27 +133,9 @@ class ImageSearchViewModel(
                 }
 
             } catch (e: Exception) {
-                handleException(e)
+                handleError(e)
             }
         }
     }
 
-    private fun handleException(e: Exception) {
-        e.printStackTrace()
-
-        val error = PicSearchErrorWithAction(
-            message = e.message,
-            confirmAction = {
-                viewModelState.update {
-                    it.copy(operationErrorMessage = null)
-                }
-            })
-        viewModelState.update {
-            it.copy(operationErrorMessage = error)
-        }
-    }
-
-    companion object {
-        const val TAG = "ImageSearchViewModel"
-    }
 }
