@@ -30,9 +30,11 @@ import com.alexeybondarenko.domain.service.settings.usecase.SetApiSettingUseCase
 import com.alexeybondarenko.domain.service.settings.usecase.SetLanguageSettingUseCase
 import com.alexeybondarenko.domain.service.settings.usecase.SetThemeSettingUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.ImageSearchViewModel
+import com.alexeybondarenko.picsearch.ui.imagesearch.searchhistory.SearchHistoryViewModel
 import com.alexeybondarenko.picsearch.ui.savedimages.SavedImagesViewModel
 import com.alexeybondarenko.picsearch.ui.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
+import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -53,9 +55,13 @@ val settingScreenModule = module {
     viewModelOf(::SettingsViewModel)
 }
 
-val imageSearchModule = module {
-    singleOf(::GetPhotosByQueryUseCase)
-    singleOf(::GetPhotoByIdUseCase)
+val searchHistoryModule = module {
+    viewModelOf(::SearchHistoryViewModel)
+}
+
+val imageSearchServiceModule = module {
+    factoryOf(::GetPhotosByQueryUseCase)
+    factoryOf(::GetPhotoByIdUseCase)
 
     single<PhotosService> { PhotosServiceUnsplashImpl(get()) }
 
@@ -63,13 +69,13 @@ val imageSearchModule = module {
     single<UnsplashApi> { ApiServiceFactory.makeUnsplashApi() }
 }
 
-val imageStorageModule = module {
-    singleOf(::CheckIsImageStorageEmptyUseCase)
-    singleOf(::DeleteAllImagesInStorageUseCase)
-    singleOf(::DeleteImageByIdFromStorageUseCase)
-    singleOf(::GetAllImagesFromStorageUseCase)
-    singleOf(::GetImageByIdFromStorageUseCase)
-    singleOf(::SaveImageToStorageUseCase)
+val imageStorageServiceModule = module {
+    factoryOf(::CheckIsImageStorageEmptyUseCase)
+    factoryOf(::DeleteAllImagesInStorageUseCase)
+    factoryOf(::DeleteImageByIdFromStorageUseCase)
+    factoryOf(::GetAllImagesFromStorageUseCase)
+    factoryOf(::GetImageByIdFromStorageUseCase)
+    factoryOf(::SaveImageToStorageUseCase)
 
     single<ImageStorageService> { ImageStorageServiceImpl(get()) }
 
@@ -79,9 +85,9 @@ val imageStorageModule = module {
     }
 }
 
-val searchHistoryModule = module {
-    singleOf(::GetAllSearchHistoryEntriesUseCase)
-    singleOf(::SaveQueryToSearchHistoryUseCase)
+val searchHistoryServiceModule = module {
+    factoryOf(::GetAllSearchHistoryEntriesUseCase)
+    factoryOf(::SaveQueryToSearchHistoryUseCase)
 
     single<SearchHistoryService> { SearchHistoryServiceImpl(get()) }
 
@@ -91,13 +97,13 @@ val searchHistoryModule = module {
     }
 }
 
-val appSettingsModule = module {
-    singleOf(::GetApiSettingUseCase)
-    singleOf(::GetLanguageSettingUseCase)
-    singleOf(::GetThemeSettingUseCase)
-    singleOf(::SetApiSettingUseCase)
-    singleOf(::SetThemeSettingUseCase)
-    singleOf(::SetLanguageSettingUseCase)
+val appSettingsServiceModule = module {
+    factoryOf(::GetApiSettingUseCase)
+    factoryOf(::GetLanguageSettingUseCase)
+    factoryOf(::GetThemeSettingUseCase)
+    factoryOf(::SetApiSettingUseCase)
+    factoryOf(::SetThemeSettingUseCase)
+    factoryOf(::SetLanguageSettingUseCase)
 
     single<SettingsService> { SettingsServiceImpl(androidContext()) }
 }

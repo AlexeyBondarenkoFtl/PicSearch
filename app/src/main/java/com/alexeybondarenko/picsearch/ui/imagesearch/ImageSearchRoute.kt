@@ -3,20 +3,25 @@ package com.alexeybondarenko.picsearch.ui.imagesearch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alexeybondarenko.picsearch.ui.imagesearch.searchhistory.SearchHistoryViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ImageSearchRoute(
-    viewModel: ImageSearchViewModel = koinViewModel()
+    imageSearchViewModel: ImageSearchViewModel = koinViewModel(),
+    searchHistoryViewModel: SearchHistoryViewModel = koinViewModel(),
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val searchHistoryUiState by viewModel.searchHistoryUiState.collectAsStateWithLifecycle()
+    val imageSearchUiState by imageSearchViewModel.uiState.collectAsStateWithLifecycle()
+    val searchHistoryUiState by searchHistoryViewModel.uiState.collectAsStateWithLifecycle()
 
     ImageSearchScreen(
-        uiState = uiState,
+        uiState = imageSearchUiState,
         searchHistory = searchHistoryUiState,
-        onSearchClick = viewModel::searchByQuery,
-        onImageClick = viewModel::saveImage,
-        onRequestNextItems = viewModel::loadNextImages
+        onSearchClick = { query ->
+            imageSearchViewModel.searchByQuery(query)
+            searchHistoryViewModel.updateSearchHistory()
+        },
+        onImageClick = imageSearchViewModel::saveImage,
+        onRequestNextItems = imageSearchViewModel::loadNextImages
     )
 }

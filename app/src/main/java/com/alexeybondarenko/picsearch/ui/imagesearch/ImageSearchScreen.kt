@@ -36,7 +36,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.alexeybondarenko.picsearch.ui.imagesearch.data.SearchHistoryItem
+import com.alexeybondarenko.picsearch.ui.imagesearch.searchhistory.data.SearchHistoryItem
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchErrorDialog
 import com.alexeybondarenko.picsearch.ui.utils.common.PicSearchImageList
 

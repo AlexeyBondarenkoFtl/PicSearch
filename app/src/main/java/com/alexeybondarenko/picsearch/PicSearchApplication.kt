@@ -2,13 +2,14 @@ package com.alexeybondarenko.picsearch
 
 import android.app.Application
 import com.alexeybondarenko.picsearch.di.appModule
-import com.alexeybondarenko.picsearch.di.appSettingsModule
+import com.alexeybondarenko.picsearch.di.appSettingsServiceModule
 import com.alexeybondarenko.picsearch.di.databaseModule
-import com.alexeybondarenko.picsearch.di.imageSearchModule
+import com.alexeybondarenko.picsearch.di.imageSearchServiceModule
 import com.alexeybondarenko.picsearch.di.imageSearchScreenModule
-import com.alexeybondarenko.picsearch.di.imageStorageModule
+import com.alexeybondarenko.picsearch.di.imageStorageServiceModule
 import com.alexeybondarenko.picsearch.di.savedImagesScreenModule
 import com.alexeybondarenko.picsearch.di.searchHistoryModule
+import com.alexeybondarenko.picsearch.di.searchHistoryServiceModule
 import com.alexeybondarenko.picsearch.di.settingScreenModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -25,10 +26,11 @@ class PicSearchApplication : Application() {
                 imageSearchScreenModule,
                 savedImagesScreenModule,
                 settingScreenModule,
-                imageSearchModule,
-                imageStorageModule,
                 searchHistoryModule,
-                appSettingsModule,
+                imageSearchServiceModule,
+                imageStorageServiceModule,
+                searchHistoryServiceModule,
+                appSettingsServiceModule,
                 databaseModule
             )
         }

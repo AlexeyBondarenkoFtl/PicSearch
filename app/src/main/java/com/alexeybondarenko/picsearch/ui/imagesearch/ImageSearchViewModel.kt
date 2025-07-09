@@ -6,15 +6,10 @@ import com.alexeybondarenko.domain.models.SearchHistoryEntryEntity
 import com.alexeybondarenko.domain.service.imagestorage.usecase.SaveImageToStorageUseCase
 import com.alexeybondarenko.domain.service.photo.usecase.GetPhotoByIdUseCase
 import com.alexeybondarenko.domain.service.photo.usecase.GetPhotosByQueryUseCase
-import com.alexeybondarenko.domain.service.searchhistory.usecase.GetAllSearchHistoryEntriesUseCase
 import com.alexeybondarenko.domain.service.searchhistory.usecase.SaveQueryToSearchHistoryUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
-import com.alexeybondarenko.picsearch.ui.imagesearch.data.SearchHistoryItem
 import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
-import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import com.alexeybondarenko.picsearch.ui.utils.base.viewmodel.PicSearchViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,29 +17,13 @@ class ImageSearchViewModel(
     private val getPhotosByQueryUseCase: GetPhotosByQueryUseCase,
     private val saveImageToStorageUseCase: SaveImageToStorageUseCase,
     private val getPhotoByIdUseCase: GetPhotoByIdUseCase,
-    private val getAllSearchHistoryEntriesUseCase: GetAllSearchHistoryEntriesUseCase,
     private val saveQueryToSearchHistoryUseCase: SaveQueryToSearchHistoryUseCase,
 ) : PicSearchViewModel<ImageSearchViewModelState, ImageSearchUiState>(
     initialState = ImageSearchViewModelState()
 ) {
     override val tag: String = "ImageSearchViewModel"
 
-    // todo move to separate screen
-    private val searchHistoryState = MutableStateFlow<List<SearchHistoryItem>>(emptyList())
-
-    // todo move to separate screen
-    val searchHistoryUiState = searchHistoryState
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = emptyList()
-        )
-
     private var lastPage = 1
-
-    init {
-        updateSearchHistory()
-    }
 
     fun searchByQuery(
         query: String,
@@ -73,8 +52,6 @@ class ImageSearchViewModel(
                 viewModelState.update {
                     it.copy(isLoading = false)
                 }
-
-                updateSearchHistory()
             }
         }
     }
@@ -122,20 +99,6 @@ class ImageSearchViewModel(
         )
     }
 
-    // todo move to separate screen
-    private fun updateSearchHistory() {
-        viewModelScope.launch {
-            try {
-                val searchHistoryEntries = getAllSearchHistoryEntriesUseCase.execute()
 
-                searchHistoryState.update {
-                    searchHistoryEntries.map { SearchHistoryItem(it.query) }
-                }
-
-            } catch (e: Exception) {
-                handleError(e)
-            }
-        }
-    }
 
 }
