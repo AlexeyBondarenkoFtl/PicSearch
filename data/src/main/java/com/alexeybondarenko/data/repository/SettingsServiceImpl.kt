@@ -38,16 +38,26 @@ class SettingsServiceImpl(
     override fun observeThemeSetting(): Flow<ThemeSettingEntity> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
             if (key == SettingKeyEntity.THEME.value) {
-                val theme = getSetting(SettingKeyEntity.THEME, SettingsService.DefaultSettings.themeDefault) as ThemeSettingEntity
-                trySend(theme)
+                val newTheme = getThemeSetting()
+                trySend(newTheme)
             }
         }
+
         sharedPrefs.registerOnSharedPreferenceChangeListener(listener)
 
-        val initialTheme = getSetting(SettingKeyEntity.THEME, SettingsService.DefaultSettings.themeDefault) as ThemeSettingEntity
+        val initialTheme = getThemeSetting()
         trySend(initialTheme)
 
-        awaitClose { sharedPrefs.unregisterOnSharedPreferenceChangeListener(listener) }
+        awaitClose {
+            sharedPrefs.unregisterOnSharedPreferenceChangeListener(listener)
+        }
+    }
+
+    private fun getThemeSetting(): ThemeSettingEntity {
+        return getSetting(
+            SettingKeyEntity.THEME,
+            SettingsService.DefaultSettings.themeDefault
+        ) as ThemeSettingEntity
     }
 
     companion object {
