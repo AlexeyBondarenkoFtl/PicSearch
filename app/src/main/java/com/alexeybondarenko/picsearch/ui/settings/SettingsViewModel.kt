@@ -13,7 +13,7 @@ import com.alexeybondarenko.domain.service.settings.usecase.SetThemeSettingUseCa
 import com.alexeybondarenko.picsearch.ui.settings.utils.ApiSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.LanguageSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.ThemeSelectionMapper
-import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchError
+import com.alexeybondarenko.picsearch.ui.utils.base.error.PicSearchError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map

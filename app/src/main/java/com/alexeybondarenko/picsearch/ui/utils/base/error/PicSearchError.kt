@@ -1,4 +1,4 @@
-package com.alexeybondarenko.picsearch.ui.utils.base
+package com.alexeybondarenko.picsearch.ui.utils.base.error
 
 
 class PicSearchError(

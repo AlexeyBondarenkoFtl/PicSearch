@@ -4,7 +4,7 @@ import com.alexeybondarenko.domain.service.settings.repository.SettingsService
 import com.alexeybondarenko.picsearch.ui.settings.utils.ApiSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.LanguageSelectionMapper
 import com.alexeybondarenko.picsearch.ui.settings.utils.ThemeSelectionMapper
-import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchError
+import com.alexeybondarenko.picsearch.ui.utils.base.error.PicSearchError
 
 data class SettingsViewModelState(
     val currentApi: ApiSelection = api,

@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
-import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchError
+import com.alexeybondarenko.picsearch.ui.utils.base.error.PicSearchError
 
 @Composable
 fun PicSearchErrorDialog(

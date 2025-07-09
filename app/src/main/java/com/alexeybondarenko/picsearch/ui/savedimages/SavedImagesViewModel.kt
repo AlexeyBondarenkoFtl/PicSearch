@@ -5,7 +5,7 @@ import com.alexeybondarenko.domain.service.imagestorage.usecase.DeleteImageByIdF
 import com.alexeybondarenko.domain.service.imagestorage.usecase.GetAllImagesFromStorageUseCase
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
 import com.alexeybondarenko.picsearch.ui.utils.ImageUtils.calculateAspectRatio
-import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchViewModel
+import com.alexeybondarenko.picsearch.ui.utils.base.viewmodel.PicSearchViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 

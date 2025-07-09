@@ -1,8 +1,8 @@
 package com.alexeybondarenko.picsearch.ui.imagesearch
 
 import com.alexeybondarenko.picsearch.ui.imagesearch.data.ImageCard
-import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchError
-import com.alexeybondarenko.picsearch.ui.utils.base.PicSearchViewModelState
+import com.alexeybondarenko.picsearch.ui.utils.base.error.PicSearchError
+import com.alexeybondarenko.picsearch.ui.utils.base.viewmodel.PicSearchViewModelState
 
 data class ImageSearchViewModelState(
     override val error: PicSearchError? = null,

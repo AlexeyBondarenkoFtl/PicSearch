@@ -11,8 +11,9 @@ class SearchHistoryServiceImpl(
     private val mapper = SearchHistoryEntryDbModelMapper()
 
     override suspend fun saveEntry(entry: SearchHistoryEntryEntity) {
-        val dbModel = mapper.mapFromEntity(entry)
+        if (checkIsPreviousEntryWasTheSame(entry)) return
 
+        val dbModel = mapper.mapFromEntity(entry)
         searchHistoryDao.insertWithLimitCheck(dbModel)
     }
 
@@ -20,5 +21,13 @@ class SearchHistoryServiceImpl(
         val entries = searchHistoryDao.getAllValues()
 
         return entries.map { mapper.mapToEntity(it) }
+    }
+
+    private suspend fun checkIsPreviousEntryWasTheSame(newEntry: SearchHistoryEntryEntity): Boolean {
+        return searchHistoryDao
+            .getAllValues()
+            .firstOrNull()
+            ?.let { mapper.mapToEntity(it).query == newEntry.query }
+            ?: false
     }
 }

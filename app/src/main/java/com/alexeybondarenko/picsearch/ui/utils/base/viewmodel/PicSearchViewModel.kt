@@ -1,7 +1,7 @@
-package com.alexeybondarenko.picsearch.ui.utils.base
+package com.alexeybondarenko.picsearch.ui.utils.base.viewmodel
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alexeybondarenko.picsearch.ui.utils.base.error.PicSearchError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +19,7 @@ interface PicSearchViewModelState<U> {
 
 abstract class PicSearchViewModel<S : PicSearchViewModelState<U>, U>(
     initialState: S
-) : ViewModel() {
+) : PicSearchBaseViewModel() {
     protected val viewModelState = MutableStateFlow(initialState)
     val uiState: StateFlow<U> = viewModelState
         .map { it.toUiState() }
@@ -29,10 +29,8 @@ abstract class PicSearchViewModel<S : PicSearchViewModelState<U>, U>(
             initialValue = initialState.toUiState()
         )
 
-    fun handleError(e: Exception) {
-        e.printStackTrace()
+    override fun handleError(e: Exception) {
+        super.handleError(e)
         viewModelState.update { it.withError(PicSearchError(e)) as S }
     }
-
-    abstract val tag: String
 }
