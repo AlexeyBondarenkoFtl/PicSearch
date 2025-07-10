@@ -41,7 +41,7 @@ PicSearch is currently under development. The core features are implemented, and
 
 ### License
 
-[License information will be specified here.]
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Русский
 
@@ -82,4 +82,4 @@ PicSearch находится в разработке. Основные функ�
 
 ### Лицензия
 
-[Информация о лицензии будет указана здесь.]
+Этот проект лицензирован под MIT License. Подробности см. в файле [LICENSE](LICENSE).
