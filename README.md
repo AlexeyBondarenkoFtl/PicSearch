@@ -1,8 +1,6 @@
 # PicSearch
 
-Eng | Rus
-
-## English
+## Eng | Rus
 
 ### Description
 
@@ -69,7 +67,7 @@ This modular structure ensures a clear separation of concerns, making the codeba
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-## Русский
+##
 
 ### Описание
 
