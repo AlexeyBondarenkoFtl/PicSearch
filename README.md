@@ -37,7 +37,33 @@ PicSearch is currently under development. The core features are implemented, and
 
 ### Clean Architecture
 
-[To be filled later]
+![Clean Architecture Diagram](images/app_architecture.png)
+
+The project adheres to the principles of Clean Architecture, with the code organized into three main modules:
+
+- **app**: Contains the core application logic, including user interface components and dependency injection configuration.
+    - `/di`: Dependency injection modules.
+    - `/ui`: User interface modules.
+
+- **data**: Responsible for data management, encompassing both remote and local data sources.
+    - `/local`: Classes for local data storage.
+        - `/dao`: Data Access Objects (DAOs) for database operations.
+        - `/mapper`: Mappers for database classes.
+        - `/model`: Database models.
+    - `/remote`: Classes for interacting with remote data sources, such as the Unsplash API.
+        - `/response`: Data classes representing API response structures.
+    - `/repository`: Repository implementations that provide a single source of truth for data, combining remote and local sources.
+        - `/utils`: Utility classes for data-related operations.
+        - `/mapper`: Classes for mapping between data models (e.g., API responses to local entities or domain models).
+- **domain**: Encapsulates the core business logic and use cases of the application.
+    - `/models`: Data models representing business entities.
+    - `/service`: Service interfaces.
+        - `/service-name`:
+            - `/repository`: Repository interfaces implemented in the data module.
+            - `/usecase`: Use case classes that encapsulate specific business logic and interact with repositories.
+    - `/utils`: Helper classes, including mappers and other utilities.
+
+This modular structure ensures a clear separation of concerns, making the codebase more maintainable, testable, and scalable.
 
 ### License
 
@@ -78,7 +104,33 @@ PicSearch находится в разработке. Основные функ�
 
 ### Чистая архитектура
 
-[Будет заполнено позже]
+![Clean Architecture Diagram](images/app_architecture.png)
+
+Проект следует принципам Чистой архитектуры, с кодом, организованным в три основных модуля:
+
+- **app**: Содержит основную логику приложения, включая компоненты пользовательского интерфейса и конфигурацию внедрения зависимостей.
+    - `/di`: Модули внедрения зависимостей.
+    - `/ui`: Модули пользовательского интерфейса.
+
+- **data**: Отвечает за управление данными, включая как удаленные, так и локальные источники данных.
+    - `/local`: Классы для локального хранения данных.
+        - `/dao`: Объекты доступа к данным (DAO) для операций с базой данных.
+        - `/mapper`: Мапперы классов бд.
+        - `/model`: Модели бд.
+    - `/remote`: Классы для взаимодействия с удаленными источниками данных, такими как API Unsplash.
+        - `/response`: Классы данных, представляющие структуры ответов API.
+    - `/repository`: Реализации репозиториев, которые предоставляют единый источник достоверных данных, объединяя удаленные и локальные источники.
+        - `/utils`: Утилитарные классы для операций, связанных с данными.
+        - `/mapper`: Классы для маппинга между моделями данных (например, ответы API на локальные сущности или доменные модели).
+- **domain**: Инкапсулирует основную бизнес-логику и варианты использования приложения.
+    - `/models`: Модели данных, представляющие бизнес-сущности.
+    - `/service`: Интерфейсы сервисов.
+        - `/service-name`
+            - `/repository`: Интерфейсы репозиториев, которые реализуются в модуле data.
+            - `/usecase`: Классы вариантов использования, которые инкапсулируют конкретную бизнес-логику и взаимодействуют с репозиториями.
+    - `/utils`: Вспомогательные классы - мапперы и тд.
+
+Эта модульная структура обеспечивает четкое разделение ответственности, делая кодовую базу более поддерживаемой, тестируемой и масштабируемой.
 
 ### Лицензия
 
